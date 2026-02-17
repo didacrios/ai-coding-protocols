@@ -6,39 +6,37 @@ focus: [In-code comments, System Documentation, Technical Writing]
 
 # Snippet: High-Precision Documentation Protocol
 
-Apply this protocol when generating internal code comments or external system documentation.
+Apply this protocol when generating internal code comments or external system documentation. This snippet works in conjunction with the standards in `./.ai/stacks/`.
 
 ## 1. In-Code Documentation (The "Reference" layer)
-Follow the recursive principle: documentation should explain **why**, not **what** (the code shows the "what").
-- **TypeScript:** Use TSDoc. Document generics and complex union types.
-- **PHP:** Use PHPDoc. Ensure all exceptions thrown by a method are documented with `@throws`.
-- **Baby Step Doc:** If a method is refactored, the documentation must be updated in the same iteration.
+Follow the recursive principle: documentation must explain **why**, not **what**.
+- **TypeScript:** Use TSDoc. Explicitly document generics, complex union types, and interface contracts found in the project.
+- **PHP:** Use PHPDoc. Mandatory `@throws` for all identified exceptions in the call chain.
+- **Synchronization:** Documentation must be updated in the same "Baby Step" as the code change.
 
 ## 2. System Documentation (The `/docs/` Folder)
-When asked to document a feature or module, use the **Diátaxis Framework** to choose the right file type:
+When generating files for the project's `/docs/` directory, strictly apply the **Diátaxis Framework**:
 
 ### A. Tutorials (Learning-oriented)
-- Focus on the "First Steps".
-- Abstract away the complexity. Goal: A successful first run.
+- Focus: "Learning by doing". Abstract complexity to guarantee a successful first run.
 
 ### B. How-To Guides (Problem-oriented)
-- Steps to achieve a specific real-world goal (e.g., "How to add a new Payment Gateway").
-- Assume the user has basic knowledge.
+- Focus: "Solving a specific task". Steps for real-world goals (e.g., "Adding a new Payment Gateway").
 
 ### C. Explanations (Understanding-oriented)
-- High-level architecture. Why did we choose this pattern? 
-- Discuss recursive dependencies and system constraints.
+- Focus: "Concepts and Architecture". Discuss recursive dependencies, design patterns, and system constraints.
 
 ### D. Reference (Information-oriented)
-- Technical descriptions of APIs, schemas, and classes.
-- Must be exhaustive and objective.
+- Focus: "Technical facts". Exhaustive descriptions of APIs, schemas, and classes.
+
+
 
 ## 3. Recursive Context Check
-Before documenting:
-1. **Trace:** Read the implementation to ensure the documentation doesn't lie.
-2. **Context:** Check if a similar guide exists in `/docs/` to maintain consistency.
-3. **Verify:** Ensure all links between `/docs/` and code (like file paths) are correct.
+Before writing any documentation:
+1. **Source Trace:** Read the actual implementation to ensure the documentation is technically accurate.
+2. **Global Context:** Search the `./docs/` folder for existing guides to avoid duplication and maintain a consistent voice.
+3. **Link Verification:** Ensure all file paths and cross-references between `./docs/` and source code are valid.
 
 ## 4. Tone & Style
-- Use "The Invisible Author" style: objective, clear, and concise.
-- Use Mermaid.js for diagrams if the logic spans more than 3 recursive calls.
+- **The Invisible Author:** Objective, clear, and concise. No fluff.
+- **Visuals:** Use Mermaid.js for architecture diagrams if the recursive logic spans more than 3 calls.
