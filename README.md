@@ -25,26 +25,38 @@ Inspired by the MIT CSAIL research on [Recursive Language Models](https://arxiv.
 
 ## 🚀 How to Use
 
-### 1. The Modular Approach
-Don't copy everything. Combine the modules you need for your current project.
-Example: `protocols/recursive-exploration.md` + `stacks/typescript-standard.md`.
+### 1. Installation (The Vendor Pattern)
+To maintain coherence and provide the AI with the necessary context, you should copy these protocols into a `.ai/` folder within your project.
+
+You can use the built-in command to "vendor" the protocols into any project:
+
+```bash
+make ai dest=ruta/del/teu/projecte
+```` 
+
+This will create a `.ai/` directory in the destination project with all the protocols, stacks, and snippets.
 
 ### 2. Tool Integration
 
-#### **Cursor**
-Create a `.cursorrules` file in your root directory and paste the combined instructions from the relevant blueprint. Or use the `.cursor/rules.md` structure.
+#### Cursor
 
-#### **Claude (CLI & Web)**
-For the CLI, use a `CLAUDE.md` file. For the Web version, add the protocols to the "Project Instructions".
+Create a `.cursorrules` file in your project root. Reference the vendored files:
 
-#### **Gemini Code Assist**
-Paste the protocols into the "System Instructions" to take advantage of the long context window without losing precision.
+> Follow the reasoning logic in `./.ai/protocols/recursive-exploration.md` and the standards in `./.ai/stacks/typescript-standard.md.`
 
-## 🛠️ Key Rules at a Glance
-- 👶 **Baby Steps**: One logical change per iteration.
-- 🧪 **TDD First**: One test at a time, Given-When-Then format.
-- 📏 **Small Methods**: Max 20 lines per function.
-- 🔍 **Strict Exploration**: Verify interfaces and types before implementation.
+### Claude (CLI & Web)
+
+For Claude Code (CLI), use a CLAUDE.md file that references the ./.ai/ directory. For the Web version, paste the relevant protocols into "Project Instructions".
+
+### Gemini Code Assist
+
+Paste the protocols into the "System Instructions" to guide Gemini's 2M context window with high-precision rules.
+
+### 🛠️ Key Rules at a Glance
+- 👶 Baby Steps: One logical change per iteration.
+- 🧪 TDD First: One test at a time, Given-When-Then format.
+- 📏 Small Methods: Max 20 lines per function.
+- 🔍 Strict Exploration: Verify interfaces and types before implementation.
 
 ---
 *Maintained by [didacrios]. Inspired by Recursive Language Modeling research (2025/26).*
