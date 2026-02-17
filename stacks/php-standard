@@ -1,0 +1,34 @@
+---
+stack: PHP
+version: ">=8.2"
+testing_framework: PHPUnit
+patterns: [Object Mother, Value Objects, Data Providers]
+strict_mode: true
+---
+
+# Stack: PHP & Testing Standards
+
+## 1. Environment & Constraints
+- **PHP Version:** Target version is {{version}}. Use modern features (Readonly properties, Enums, Constructor Promotion) where applicable.
+- **Strict Typing:** Always include `declare(strict_types=1);` at the top of every file.
+- **PSR Standards:** Adhere strictly to PSR-12 (Coding Style) and PSR-4 (Autoloading).
+
+## 2. Clean Code & Architecture
+- **Method Size:** Methods must be between 10 and 20 lines max.
+- **Abstractions:** Use Value Objects for domain concepts (Email, Price, Id).
+- **Inversion of Control:** Dependencies must be injected via constructor, preferably using promoted properties.
+
+## 3. Testing Protocol (PHPUnit)
+- **Framework:** PHPUnit.
+- **TDD Flow:** Create exactly one test before implementing the logic.
+- **Naming:** `test[FunctionName]_[Scenario]_[ExpectedResult]`.
+- **Structure:** Use **Given-When-Then** comments.
+
+## 4. Test Maintainability
+- **Object Mother:** Use for complex entities.
+- **Data Providers:** Use `@dataProvider` to keep tests DRY when testing multiple cases.
+- **Location:** `tests/` mirroring `src/`.
+
+## 5. Recursive Verification
+- **Autoloading:** Check `composer.json` or directory structure to ensure correct namespaces.
+- **Type Tracing:** If a method returns a class, peek into that class to understand its structure before using the return value.
