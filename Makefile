@@ -11,8 +11,8 @@ ai:
 		exit 1; \
 	fi
 	@mkdir -p $(AI_DEST)/.ai
-	@cp -r protocols stacks blueprints snippets $(AI_DEST)/.ai/
-	@echo "✅ Protocols vendored to $(AI_DEST)/.ai/"
+	@cp -r skills blueprints template $(AI_DEST)/.ai/
+	@echo "✅ Skills vendored to $(AI_DEST)/.ai/"
 
 %:
 	@:

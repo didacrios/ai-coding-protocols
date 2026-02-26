@@ -1,62 +1,114 @@
-# AI Coding Protocols 🤖🧠
+# AI Coding Protocols
 
-> Modular framework for high-precision AI assistance based on **Recursive Language Modeling (RLM)**.
+> Modular skills for high-precision AI coding assistance, combining **Recursive Language Modeling (RLM)** with **Context Engineering** best practices.
 
-This repository provides a standardized set of instructions to transform LLMs (Cursor, Claude, Gemini) into senior software engineering agents. Instead of relying on massive context windows, these protocols force the AI to explore codebases programmatically and recursively.
+A curated set of skills that transform AI coding agents into senior software engineering assistants. These skills force the AI to explore codebases recursively, manage context efficiently, and follow engineering standards rigorously.
 
+**Target tools:** Claude Code, Cursor
 
+## Architecture
 
-## 🏗️ Architecture
+The repository uses a skills-based architecture following the [SKILL.md specification](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering). Each skill is a self-contained file with standardized metadata, activation triggers, and integration references.
 
-The repository is organized into four modular layers:
+```
+ai-coding-protocols/
+├── skills/           # Self-contained skill definitions
+├── blueprints/       # Tool-specific integration configs
+├── template/         # Canonical SKILL.md template
+└── Makefile          # Vendor command
+```
 
-* **`/protocols`**: The "Thinking Engine". Rules for recursive exploration, baby steps, and reasoning.
-* **`/stacks`**: The "Technical Standards". Language-specific rules (TypeScript, PHP), testing patterns, and architectural constraints.
-* **`/blueprints`**: The "Integration Layer". Pre-assembled configurations for specific tools like `.cursorrules` or `CLAUDE.md`.
-* **`/snippets`**: The "Task Toolbox". Short, reusable prompts for refactoring, documentation, or debugging.
+### Skills
 
-## 🧬 Core Philosophy: Recursive Reasoning (RLM)
+#### Engineering Skills (original)
 
-Inspired by the MIT CSAIL research on [Recursive Language Models](https://arxiv.org/pdf/2512.24601), this framework implements:
+| Skill | Description | Triggers |
+|-------|-------------|----------|
+| `recursive-exploration` | Codebase exploration and iterative development using RLM | explore, trace, investigate, dependency |
+| `typescript-standard` | TypeScript clean code and TDD standards | typescript, jest, playwright, tdd |
+| `php-standard` | PHP strict typing, PSR compliance, and PHPUnit standards | php, phpunit, laravel, psr |
+| `code-review` | Emoji-driven code review protocol | review, pr, pull-request, diff |
+| `refactor` | Surgical refactoring without behavior changes | refactor, cleanup, simplify, extract |
+| `documentation` | In-code and system docs using Diataxis framework | docs, documentation, tsdoc, phpdoc |
 
-1.  **Codebase as External Memory**: The AI must query and explore files instead of guessing.
-2.  **Recursive Tracing**: If a function is modified, the AI must recursively check all its call sites and dependencies.
-3.  **Inference-Time Scaling**: We trade speed for quality by forcing the AI to "think" and "explore" before it "writes".
+#### Context Engineering Skills (adapted from [Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering))
 
-## 🚀 How to Use
+| Skill | Description | Triggers |
+|-------|-------------|----------|
+| `context-fundamentals` | Attention budgets, progressive disclosure, context quality vs quantity | context, attention, progressive-disclosure |
+| `filesystem-context` | Filesystem as persistent context layer: scratch pads, plan persistence, offloading | filesystem, scratch-pad, plan-persistence |
+| `project-development` | Task-model fit, pipeline architecture, cost estimation, agent-assisted dev | project, pipeline, task-model-fit |
+| `context-optimization` | Compaction, observation masking, KV-cache optimization, partitioning | context-limit, optimization, compaction |
+| `context-compression` | Anchored summarization, compression timing, artifact trail preservation | compression, summarization, long-session |
+| `tool-design` | Designing effective MCP tools, descriptions as prompts, consolidation principle | tool-design, mcp, agent-tools |
+| `evaluation` | Outcome-focused evaluation, multi-dimensional rubrics, LLM-as-judge | evaluation, testing, quality, metrics |
 
-### 1. Installation (The Vendor Pattern)
-To maintain coherence and provide the AI with the necessary context, you should copy these protocols into a `.ai/` folder within your project.
+#### Meta Skills
 
-You can use the built-in command to "vendor" the protocols into any project:
+| Skill | Description | Triggers |
+|-------|-------------|----------|
+| `skill-generator` | Meta-skill for creating new project-specific skills as the codebase evolves | new-skill, generate-skill, new-module, new-pattern |
+| `project-bootstrap` | Initial project analysis — detects stack, conventions, generates project-overview skill | bootstrap, init, setup, first-run |
+
+### Blueprints
+
+Pre-assembled configurations for specific tools:
+- **`cursor-rules.md`** — Drop-in `.cursor/rules/` content for Cursor
+- **`claude-cli.md`** — Drop-in `CLAUDE.md` content for Claude Code
+
+## Installation
+
+Vendor the skills into any project's `.ai/` directory:
 
 ```bash
-make ai dest=ruta/del/teu/projecte
-```` 
+make ai /path/to/your/project
+```
 
-This will create a `.ai/` directory in the destination project with all the protocols, stacks, and snippets.
+This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/project/.ai/`.
 
-### 2. Tool Integration
+### Claude Code
 
-#### Cursor
+Add to your project's `CLAUDE.md`:
 
-Create a `.cursorrules` file in your project root. Reference the vendored files:
+```
+Follow the engineering standards vendored in ./.ai/skills/.
+See ./.ai/blueprints/claude-cli.md for the full operational protocol.
+```
 
-> Follow the reasoning logic in `./.ai/protocols/recursive-exploration.md` and the standards in `./.ai/stacks/typescript-standard.md.`
+### Cursor
 
-### Claude (CLI & Web)
+Create a rule file in `.cursor/rules/` (`.cursorrules` is deprecated) with the content of `blueprints/cursor-rules.md`, or reference it:
 
-For Claude Code (CLI), use a CLAUDE.md file that references the ./.ai/ directory. For the Web version, paste the relevant protocols into "Project Instructions".
+```
+Follow the engineering standards vendored in ./.ai/skills/.
+See ./.ai/blueprints/cursor-rules.md for the full operational protocol.
+```
 
-### Gemini Code Assist
+### Project Bootstrap (optional)
 
-Paste the protocols into the "System Instructions" to guide Gemini's 2M context window with high-precision rules.
+After vendoring, ask your AI agent to run the bootstrap process. It will scan your project, detect the stack and conventions, and generate an initial project-specific skill in `.ai/skills/project/`:
 
-### 🛠️ Key Rules at a Glance
-- 👶 Baby Steps: One logical change per iteration.
-- 🧪 TDD First: One test at a time, Given-When-Then format.
-- 📏 Small Methods: Max 20 lines per function.
-- 🔍 Strict Exploration: Verify interfaces and types before implementation.
+```
+Bootstrap this project using .ai/skills/project-bootstrap/SKILL.md
+```
+
+As the project evolves, the `skill-generator` skill guides the agent to create additional project-specific skills automatically.
+
+## Creating New Skills
+
+Use the template:
+
+```bash
+mkdir skills/my-new-skill
+cp template/SKILL.md skills/my-new-skill/SKILL.md
+```
+
+Each SKILL.md includes: frontmatter metadata, activation triggers, detailed guidance, examples, verifiable guidelines, and integration references.
+
+## Credits
+
+- **SKILL.md format and Context Engineering skills** adapted from [Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering) by Muratcan Koylan (MIT License)
+- **Recursive Language Modeling** inspired by MIT CSAIL research on [Recursive Language Models](https://arxiv.org/pdf/2512.24601)
 
 ---
-*Maintained by [didacrios]. Inspired by Recursive Language Modeling research (2025/26).*
+*Maintained by [didacrios].*
