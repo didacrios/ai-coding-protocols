@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+
+- `skills/plan-initiative/SKILL.md` — Initiative framing protocol for Engineering Managers with strict-stop discovery, explicit scope boundaries, and a single initiative-brief output.
+
 ## [1.0.0] — 2026-02-26
 
 ### Added

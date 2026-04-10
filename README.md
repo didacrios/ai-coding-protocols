@@ -30,6 +30,7 @@ ai-coding-protocols/
 | `code-review` | Emoji-driven code review protocol | review, pr, pull-request, diff |
 | `refactor` | Surgical refactoring without behavior changes | refactor, cleanup, simplify, extract |
 | `documentation` | In-code and system docs using Diataxis framework | docs, documentation, tsdoc, phpdoc |
+| `plan-initiative` | Initiative framing protocol for Engineering Managers with strict discovery and scope boundaries | initiative, kickoff, scope, framing, epics |
 
 #### Context Engineering Skills (adapted from [Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering))
 
