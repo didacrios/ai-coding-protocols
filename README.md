@@ -51,11 +51,26 @@ ai-coding-protocols/
 | `skill-generator` | Meta-skill for creating new project-specific skills as the codebase evolves | new-skill, generate-skill, new-module, new-pattern |
 | `project-bootstrap` | Initial project analysis — detects stack, conventions, generates project-overview skill | bootstrap, init, setup, first-run |
 
+#### Marketing Skills (adapted from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills))
+
+Vendored under `skills/marketing/`. These skills follow the [Agent Skills spec](https://agentskills.io/specification.md): triggers are embedded in the `description` field (no explicit `triggers:` array) and version lives under `metadata.version`. The foundation skill `product-marketing-context` is read first by every other marketing skill. See [`blueprints/marketing.md`](blueprints/marketing.md) for the full operational protocol.
+
+| Category | Skills |
+|----------|--------|
+| **SEO & Content** | `seo-audit`, `ai-seo`, `site-architecture`, `programmatic-seo`, `schema-markup`, `content-strategy` |
+| **CRO** | `page-cro`, `signup-flow-cro`, `onboarding-cro`, `form-cro`, `popup-cro`, `paywall-upgrade-cro` |
+| **Content & Copy** | `copywriting`, `copy-editing`, `cold-email`, `email-sequence`, `social-content` |
+| **Paid & Measurement** | `paid-ads`, `ad-creative`, `ab-test-setup`, `analytics-tracking` |
+| **Growth & Retention** | `referral-program`, `free-tool-strategy`, `churn-prevention`, `community-marketing`, `lead-magnets` |
+| **Sales & GTM** | `revops`, `sales-enablement`, `launch-strategy`, `pricing-strategy`, `competitor-alternatives`, `aso-audit` |
+| **Strategy & Research** | `marketing-ideas`, `marketing-psychology`, `customer-research`, `product-marketing-context` |
+
 ### Blueprints
 
 Pre-assembled configurations for specific tools:
 - **`cursor-rules.md`** — Drop-in `.cursor/rules/` content for Cursor
 - **`claude-cli.md`** — Drop-in `CLAUDE.md` content for Claude Code
+- **`marketing.md`** — Drop-in protocol for marketing agents (product context, skill activation by description, category map)
 
 ## Installation
 
@@ -109,6 +124,7 @@ Each SKILL.md includes: frontmatter metadata, activation triggers, detailed guid
 ## Credits
 
 - **SKILL.md format and Context Engineering skills** adapted from [Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering) by Muratcan Koylan (MIT License)
+- **Marketing skills** adapted from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) by Corey Haines (MIT License)
 - **Recursive Language Modeling** inspired by MIT CSAIL research on [Recursive Language Models](https://arxiv.org/pdf/2512.24601)
 
 ---
