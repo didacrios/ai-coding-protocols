@@ -82,6 +82,30 @@ make ai /path/to/your/project
 
 This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/project/.ai/`.
 
+### Skills manifest (skills.json)
+
+`skills.json` declares what is owned versus what is consumed:
+
+- **Own skills** live in `skills/` and are installed with
+  `npx skills add didacrios/ai-coding-protocols`.
+- **Third-party dependencies** (e.g. `mattpocock/skills`) are declared, never
+  committed. Install them with:
+
+  ```bash
+  make install-skills        # or: node scripts/install-skills.mjs --list
+  ```
+
+  The installer drives [`npx skills add`](https://github.com/vercel-labs/skills)
+  per declared skill; the CLI lockfile (`~/.agents/.skill-lock.json`) tracks
+  sources and `npx skills check` / `skills update` detect upstream changes.
+
+### OpenCode / pi dev workflow
+
+The portable development workflow (10 agents, 14 commands, harness contracts,
+global rules) lives under `harness/opencode/`. See
+[`blueprints/opencode.md`](blueprints/opencode.md) for the full setup on a new
+machine (`make install-opencode` symlinks agents, commands and docs).
+
 ### Claude Code
 
 Add to your project's `CLAUDE.md`:
