@@ -1,0 +1,5 @@
+# Local Pi runtime state
+.atl/
+
+# Local agent workflow state
+odd/
