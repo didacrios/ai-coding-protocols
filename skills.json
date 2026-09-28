@@ -1,0 +1,40 @@
+{
+  "name": "ai-coding-protocols",
+  "description": "Manifest of agent skills: own skills (in skills/) plus third-party dependencies installed via the skills CLI (npx skills add). Third-party skills are declared, never committed.",
+  "own": {
+    "note": "Auto-discovered from skills/ — each directory with a SKILL.md. Install with: npx skills add didacrios/ai-coding-protocols",
+    "adapted": {
+      "muratcankoylan/Agent-Skills-for-Context-Engineering": [
+        "context-fundamentals",
+        "context-compression",
+        "context-optimization",
+        "filesystem-context",
+        "project-development",
+        "tool-design",
+        "evaluation"
+      ],
+      "coreyhaines31/marketingskills": [
+        "marketing/*"
+      ]
+    }
+  },
+  "dependencies": [
+    {
+      "source": "mattpocock/skills",
+      "ref": "main",
+      "base": "skills",
+      "skills": [
+        "engineering/tdd",
+        "engineering/diagnosing-bugs",
+        "engineering/codebase-design",
+        "engineering/domain-modeling",
+        "engineering/prototype",
+        "engineering/research",
+        "engineering/resolving-merge-conflicts",
+        "productivity/grilling",
+        "productivity/handoff"
+      ],
+      "note": "code-review exists in both repos; only one is installed (own emoji-driven variant lives in skills/code-review)"
+    }
+  ]
+}
