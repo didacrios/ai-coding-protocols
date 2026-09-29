@@ -123,8 +123,19 @@ review.
 - `skills.json` third-party installs use the skills CLI lockfile
   (`~/.agents/.skill-lock.json`); `npx skills check` / `npx skills update`
   detect upstream changes.
-- Name collision: both this repo and `mattpocock/skills` have a `code-review`
+- Name collision: both this repository and `mattpocock/skills` have a `code-review`
   skill. Install only one.
-- The kit also ships skills named like the `addyosmani/agent-skills` ones
-  (adapted bodies). For OpenCode the kit wins; the declared dependency matters
-  for harnesses without the kit (pi).
+- **OAK kit overlap**: the kit ships adapted copies of twelve `addyosmani/agent-skills`
+  skills (`api-and-interface-design`, `code-review-and-quality`, `code-simplification`,
+  `context-engineering`, `debugging-and-error-recovery`, `documentation-and-adrs`,
+  `doubt-driven-development`, `performance-optimization`, `security-and-hardening`,
+  `source-driven-development`, `test-driven-development`, `using-agent-skills`).
+  They stay declared in `skills.json` (a harness without the kit needs them), but
+  `scripts/install-skills.mjs` skips them whenever the kit is present — opencode reads
+  both its own skills directory and every path in `skills.paths`, so a raw copy next to
+  the kit's adapted one would leave two skills sharing one name. Use
+  `--include-kit-overlap` on a machine without the kit.
+- The kit's skills are coupled to the kit's workflow: its agents consult
+  `docs/ai/harness/skill_registry.md`, and skills like `oak-adversarial-review` or
+  `iterative-retrieval` reference `subagent`/opencode conventions. This repository's own
+  skills reference no harness at all, so they layer on top of any workflow.

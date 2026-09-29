@@ -107,7 +107,10 @@ This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/projec
   catalog) — pinned to `0.6.11`. Earlier copies of these skills were vendored
   through `stanfish06/skillquarium` (an unlicensed curated mirror) and adapted
   by the opencode harness; those adapted copies were removed in favor of the
-  canonical upstream.
+  canonical upstream. Twelve of them are also shipped (adapted) by the OAK kit,
+  which owns the OpenCode workflow; `scripts/install-skills.mjs` skips those when the
+  kit is present so one skill name never resolves to two different bodies
+  (`--include-kit-overlap` installs them on a machine without the kit).
 
 ### OpenCode / pi dev workflow
 
