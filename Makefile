@@ -1,11 +1,16 @@
-.PHONY: ai help install-skills install-opencode install-pi
+.PHONY: ai help install-skills install-oak install-opencode-overlay install-pi purge-gentle-ai
+
+OAK_VERSION := 1.1.1
+OPENCODE_DIR := $(HOME)/.config/opencode
 
 help:
 	@echo "Usage:"
-	@echo "  make ai <path>            Vendor skills+blueprints+template to <path>/.ai/"
-	@echo "  make install-skills       Install third-party skills from skills.json (via npx skills add)"
-	@echo "  make install-opencode     Install the OpenCode dev workflow to ~/.config/opencode"
-	@echo "  make install-pi           Convert + install the dev workflow to ~/.pi/agent"
+	@echo "  make ai <path>                  Vendor skills+blueprints+template to <path>/.ai/"
+	@echo "  make install-skills             Install third-party skills from skills.json (via npx skills add)"
+	@echo "  make install-oak                Install the OAK kit (OpenCode harness) globally, pinned to $(OAK_VERSION)"
+	@echo "  make install-opencode-overlay   Merge the local Overlay into ~/.config/opencode/opencode.json"
+	@echo "  make install-pi                 Convert + install the harness to ~/.pi/agent"
+	@echo "  make purge-gentle-ai            Dry-run: report gentle-ai residue in $(OPENCODE_DIR)"
 
 AI_DEST := $(word 2, $(MAKECMDGOALS))
 
@@ -21,25 +26,24 @@ ai:
 install-skills:
 	@node scripts/install-skills.mjs
 
-OPENCODE_DIR := $(HOME)/.config/opencode
+# The OpenCode harness itself is not vendored here: the OAK kit owns it, and it
+# installs and upgrades its own files through `oak`. See blueprints/opencode.md.
+install-oak:
+	@echo "Installing opencode-agent-orchestration-kit@$(OAK_VERSION) globally"
+	@npm install -g opencode-agent-orchestration-kit@$(OAK_VERSION)
+	@echo "✅ oak $(OAK_VERSION) installed."
+	@echo "Next: run 'oak install' in $(OPENCODE_DIR) (or 'oak upgrade' if the kit is already there),"
+	@echo "      then 'make install-opencode-overlay' to re-apply the local overlay."
 
-install-opencode:
-	@echo "Installing OpenCode dev workflow (symlinks) to $(OPENCODE_DIR)"
-	@mkdir -p $(OPENCODE_DIR)/agents $(OPENCODE_DIR)/commands $(OPENCODE_DIR)/docs/ai
-	@for f in harness/opencode/agents/*.md; do \
-		ln -sfn "$$(pwd)/$$f" "$(OPENCODE_DIR)/agents/$$(basename $$f)"; \
-	done
-	@for f in harness/opencode/commands/*.md; do \
-		ln -sfn "$$(pwd)/$$f" "$(OPENCODE_DIR)/commands/$$(basename $$f)"; \
-	done
-	@rm -rf $(OPENCODE_DIR)/docs/ai/harness
-	@ln -sfn "$$(pwd)/harness/opencode/docs/harness" "$(OPENCODE_DIR)/docs/ai/harness"
-	@echo "✅ Agents, commands and harness docs linked."
-	@echo "⚠ AGENTS.md is not linked automatically: merge harness/opencode/AGENTS.md content into $(OPENCODE_DIR)/AGENTS.md manually."
+install-opencode-overlay:
+	@node scripts/apply-opencode-overlay.mjs --apply
 
 install-pi:
-	@echo "Converting + installing dev workflow (pi format) to $(HOME)/.pi/agent"
+	@echo "Converting + installing harness (pi format) to $(HOME)/.pi/agent"
 	@node scripts/sync-harness.mjs --target pi
+
+purge-gentle-ai:
+	@node scripts/purge-gentle-ai.mjs
 
 %:
 	@:

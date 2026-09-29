@@ -1,0 +1,205 @@
+{
+  "$comment": "Local overlay merged into the OAK kit opencode.json after every kit upgrade. Applied by scripts/apply-opencode-overlay.mjs. Owned by the user, not by the kit.",
+  "mcp": {
+    "codegraph": {
+      "command": [
+        "codegraph",
+        "serve",
+        "--mcp"
+      ],
+      "enabled": true,
+      "type": "local"
+    },
+    "context7": {
+      "enabled": true,
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "engram": {
+      "command": [
+        "engram",
+        "mcp",
+        "--tools=agent"
+      ],
+      "type": "local"
+    }
+  },
+  "provider": {
+    "nan": {
+      "models": {
+        "deepseek-v4-flash": {
+          "contextWindow": 500000,
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "DeepSeek V4 Flash"
+        },
+        "gemma4": {
+          "contextWindow": 262144,
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "Gemma 4"
+        },
+        "glm5.2": {
+          "contextWindow": 262144,
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "GLM 5.2"
+        },
+        "glm5.3-flash": {
+          "contextWindow": 1000000,
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "GLM 5.3 Flash"
+        },
+        "mimo-v2.5": {
+          "contextWindow": 500000,
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "Xiaomi MiMo V2.5"
+        },
+        "qwen3.6": {
+          "contextWindow": 262144,
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "Qwen 3.6"
+        },
+        "qwen3.8-flash": {
+          "contextWindow": 1000000,
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "Qwen 3.8 Flash"
+        }
+      },
+      "name": "NaN",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "apiKey": "{env:NAN_API_KEY}",
+        "baseURL": "{env:NAN_BASE_URL}"
+      }
+    }
+  },
+  "skills": {
+    "paths": [
+      "~/.agents/skills"
+    ]
+  },
+  "plugin": [
+    "superpowers@git+https://github.com/obra/superpowers.git#d884ae04edebef577e82ff7c4e143debd0bbec99",
+    "openrtk@0.1.0"
+  ],
+  "permission": {
+    "bash": {
+      "*": "allow",
+      "rsync": "ask",
+      "rsync *": "ask",
+      "scp": "ask",
+      "scp *": "ask",
+      "sftp": "ask",
+      "sftp *": "ask",
+      "ssh": "ask",
+      "ssh *": "ask",
+      "git commit *": "ask",
+      "git push": "ask",
+      "git push *": "ask",
+      "git push --force *": "ask",
+      "git rebase *": "ask",
+      "git reset --hard *": "ask"
+    },
+    "edit": "ask",
+    "external_directory": "deny",
+    "glob": "allow",
+    "grep": "allow",
+    "list": "allow",
+    "lsp": "allow",
+    "read": {
+      "*": "allow",
+      "**/*.key": "deny",
+      "**/*.pem": "deny",
+      "**/.aws/credentials": "deny",
+      "**/.config/gh/hosts.yml": "deny",
+      "**/.credentials/**": "deny",
+      "**/.env": "deny",
+      "**/.env.*": "deny",
+      "**/.ssh/**": "deny",
+      "**/Library/Keychains/**": "deny",
+      "**/credentials.json": "deny",
+      "**/secrets/**": "deny",
+      "*.env": "deny",
+      "*.env.*": "deny"
+    },
+    "todowrite": "allow",
+    "webfetch": "ask",
+    "websearch": "ask"
+  },
+  "agent": {
+    "explore": {
+      "description": "Freeform exploration fallback agent",
+      "hidden": true,
+      "mode": "subagent",
+      "permission": {
+        "bash": "deny",
+        "edit": "deny",
+        "task": "deny",
+        "write": "deny"
+      },
+      "prompt": "You are the explore fallback sub-agent.\n- Independently inspect codebase files and execution paths in full without relying on unverified assumptions.\n- Read relevant code files completely before reaching conclusions.\n- Perform exploration, analysis, and discovery ONLY. Do not create, edit, or delete files.\n- Return concise, structured findings naming affected files, code paths, and clear recommendations.\n"
+    },
+    "general": {
+      "description": "General unstructured queries and auxiliary fallback tasks",
+      "hidden": true,
+      "mode": "subagent",
+      "permission": {
+        "task": "deny"
+      },
+      "prompt": "You are the general fallback sub-agent. When handling unstructured auxiliary tasks:\n- Read relevant codebase context before drawing conclusions.\n- Perform empirical verification of all claims and code execution paths.\n- Keep changes minimal and targeted when editing files.\n- Do NOT launch child sub-agents autonomously.\n"
+    }
+  }
+}

@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 /**
- * sync-harness.mjs — generate pi variants from the opencode harness sources.
+ * sync-harness.mjs — generate pi variants from the OAK kit agents and commands.
  *
- * OpenCode (harness/opencode/) is the single source of truth. This script
- * converts agents and commands into pi-compatible files (frontmatter mapping)
- * and installs them into ~/.pi/agent/ (copies, not symlinks — frontmatter
- * differs between harnesses).
+ * The OpenCode harness is owned by the OAK kit (opencode-agent-orchestration-kit),
+ * installed globally and materialised into ~/.config/opencode by `oak install`.
+ * Its pristine payload ships the agent and command sources; this script reads them
+ * from the installed kit, converts them to pi's frontmatter dialect and copies them
+ * into ~/.pi/agent/ (copies, not symlinks — the frontmatter differs per harness).
  *
  * Usage:
  *   node scripts/sync-harness.mjs --target pi                 # install to ~/.pi/agent
  *   node scripts/sync-harness.mjs --target pi --dest <dir>    # dry-run into a directory
+ *   node scripts/sync-harness.mjs --source <kit>/opencode     # explicit source
  *
  * Mapping (opencode -> pi):
  *   agents:    permission read/glob/grep/list/edit/bash -> tools read/find/grep/ls/edit/bash
@@ -18,21 +20,44 @@
  *              are templates; delegation is stated in the template body)
  */
 
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs"
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from "node:fs"
 import { fileURLToPath } from "node:url"
-import { dirname, join, basename } from "node:path"
+import { dirname, join } from "node:path"
 import { homedir } from "node:os"
+import { execFileSync } from "node:child_process"
 
-const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const args = process.argv.slice(2)
-const targetIdx = args.indexOf("--target")
-const target = targetIdx >= 0 ? args[targetIdx + 1] : "pi"
-const destIdx = args.indexOf("--dest")
-const dest = destIdx >= 0 ? args[destIdx + 1] : join(homedir(), ".pi", "agent")
+const option = (name, fallback) => {
+  const i = args.indexOf(name)
+  return i >= 0 && args[i + 1] ? args[i + 1] : fallback
+}
+const target = option("--target", "pi")
+const dest = option("--dest", join(homedir(), ".pi", "agent"))
 
 if (target !== "pi") {
   console.error(`Unknown target "${target}" (supported: pi)`)
   process.exit(1)
+}
+
+// The kit payload is the single source of truth: `oak upgrade` rewrites it, so
+// converting from the installed copy keeps pi in step with the kit version.
+function resolveSource() {
+  const explicit = option("--source", process.env.OAK_SOURCE)
+  if (explicit) return explicit
+  const candidates = []
+  try {
+    const globalRoot = execFileSync("npm", ["root", "-g"], { encoding: "utf8" }).trim()
+    candidates.push(join(globalRoot, "opencode-agent-orchestration-kit", "opencode"))
+  } catch {
+    /* npm not available: fall through to the other candidates */
+  }
+  candidates.push(join(homedir(), ".config", "opencode"))
+  for (const candidate of candidates) {
+    if (existsSync(join(candidate, "agents")) && existsSync(join(candidate, "commands"))) return candidate
+  }
+  console.error("sync-harness: cannot find the opencode harness sources.")
+  console.error("  Install the kit (npm i -g opencode-agent-orchestration-kit) or pass --source <dir>.")
+  process.exit(2)
 }
 
 // ── frontmatter helpers ──────────────────────────────────────────────────────
@@ -93,7 +118,8 @@ function convertCommand(text) {
 
 // ── run ──────────────────────────────────────────────────────────────────────
 
-const src = join(root, "harness", "opencode")
+const src = resolveSource()
+console.log(`source  ${src}`)
 const agentsDir = join(dest, "agents")
 const promptsDir = join(dest, "prompts")
 mkdirSync(agentsDir, { recursive: true })
@@ -114,5 +140,5 @@ for (const f of readdirSync(join(src, "commands")).filter((f) => f.endsWith(".md
 }
 
 console.log(`\n✅ ${n} files installed to ${dest}`)
-console.log("⚠ AGENTS.md is not merged automatically: review harness/opencode/AGENTS.md into your ~/.pi/agent/AGENTS.md manually.")
+console.log(`⚠ AGENTS.md is not merged automatically: review ${join(src, "AGENTS.md")} and reconcile it into your ~/.pi/agent/AGENTS.md manually.`)
 console.log("⚠ Model routing: pi resolves models via ~/.pi/agent/subagents.json (model_profiles); no model pins are written.")

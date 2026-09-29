@@ -12,10 +12,13 @@ The repository uses a skills-based architecture following the [SKILL.md specific
 
 ```
 ai-coding-protocols/
-├── skills/           # Self-contained skill definitions
-├── blueprints/       # Tool-specific integration configs
-├── template/         # Canonical SKILL.md template
-└── Makefile          # Vendor command
+├── skills/                   # Self-contained skill definitions (ours)
+├── skills.json               # Third-party skill manifest (declare, don't vendor)
+├── harness/                  # Local OpenCode overlay (harness itself: OAK kit)
+├── blueprints/               # Tool-specific integration configs
+├── template/                 # Canonical SKILL.md template
+├── scripts/                  # Installers, harness conversion, gentle-ai purge
+└── Makefile                  # Install + vendor commands
 ```
 
 ### Skills
@@ -108,10 +111,15 @@ This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/projec
 
 ### OpenCode / pi dev workflow
 
-The portable development workflow (10 agents, 14 commands, harness contracts,
-global rules) lives under `harness/opencode/`. See
-[`blueprints/opencode.md`](blueprints/opencode.md) for the full setup on a new
-machine (`make install-opencode` symlinks agents, commands and docs).
+The OpenCode harness (15 agents, 18 commands, kit docs) is owned by the
+[OAK kit](https://github.com/jcarlosrodicio/opencode-agent-orchestration-kit),
+pinned to `1.1.1` and installed through its own lifecycle (`oak install` /
+`oak upgrade`). This repository keeps the local overlay
+(`harness/opencode-overlay.json`: MCP servers, provider, skills path, pinned
+plugins, permissions, fallback agents) plus the tooling around it:
+`make install-oak`, `make install-opencode-overlay`, `make install-pi` and
+`make purge-gentle-ai`. See [`blueprints/opencode.md`](blueprints/opencode.md)
+for the setup, the upgrade procedure and the gentle-ai purge.
 
 ### Claude Code
 
