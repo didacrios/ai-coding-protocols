@@ -39,8 +39,8 @@ cd - && make install-opencode-overlay              # re-apply the local overlay
 #    ...and/or pi (converted copies; frontmatter mapped to pi format)
 make install-pi
 
-# 3. Environment
-cp .env.dist ~/.config/opencode/.env               # then fill in real values
+# 3. Environment (names only; the values stay yours and never enter the repo)
+cp harness/opencode.env.dist ~/.config/opencode/.env      # then fill in real values
 cd ~/.config/opencode && npm install --ignore-scripts --legacy-peer-deps
 ```
 
@@ -114,9 +114,19 @@ review.
   (`/sdd-*`), orchestrated judgment-day review, telemetry and the
   review-transport plugin are excluded. pi on this machine still runs gentle-pi;
   the two config trees are independent.
-- **Plugins**: `plugins/*.ts` in `~/.config/opencode` are runtime-specific
-  (engram, mission-runtime, open-design, orca status, token tree). Port them
-  separately if the new setup needs them.
+- **`~/.config/opencode` files that stay local**, by decision:
+  - `plugins/engram.ts` plus the `mcp.engram` entry in `opencode.json`: the bridge
+    to the `gentle-engram` package that ships the `engram` binary
+    (`~/.local/bin/engram`). Same provenance as gentle-ai, so it is out of the
+    portable set — a machine without that package has nothing to connect to.
+  - `plugins/orca-opencode-status.js`: machine-specific statusline, yours.
+  - `themes/gentleman.json`, `themes/gentleman-cute.json`: themes from the gentle-ai
+    persona. No config file references them (OpenCode picks a theme from TUI state),
+    so porting them would buy nothing.
+- **Kit-owned plugins** — `mission-runtime.ts`, `mission-runtime.test.mjs`,
+  `oak-tui/`, `open-design.ts`, `shell-export-guard.ts`, `token-tree-usage.tsx` —
+  arrive with `make install-oak`. They are not local files to preserve; an earlier
+  revision of this note wrongly listed some of them as user plugins.
 
 ## Notes
 
