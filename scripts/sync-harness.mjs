@@ -12,6 +12,11 @@
  *   node scripts/sync-harness.mjs --target pi                 # install to ~/.pi/agent
  *   node scripts/sync-harness.mjs --target pi --dest <dir>    # dry-run into a directory
  *   node scripts/sync-harness.mjs --source <kit>/opencode     # explicit source
+ *   node scripts/sync-harness.mjs --prefix oak-               # namespace the files
+ *
+ * Existing destination files are never overwritten unless --force is passed:
+ * pi already ships agents named developer, reviewer, researcher and friends, and
+ * clobbering them by accident changes an unrelated harness.
  *
  * Mapping (opencode -> pi):
  *   agents:    permission read/glob/grep/list/edit/bash -> tools read/find/grep/ls/edit/bash
@@ -33,6 +38,8 @@ const option = (name, fallback) => {
 }
 const target = option("--target", "pi")
 const dest = option("--dest", join(homedir(), ".pi", "agent"))
+const prefix = option("--prefix", "")
+const force = args.includes("--force")
 
 if (target !== "pi") {
   console.error(`Unknown target "${target}" (supported: pi)`)
@@ -125,20 +132,35 @@ const promptsDir = join(dest, "prompts")
 mkdirSync(agentsDir, { recursive: true })
 mkdirSync(promptsDir, { recursive: true })
 
+// A destination file that already exists and differs is a conflict: it usually
+// belongs to another harness, so refuse to clobber it unless --force says so.
+const conflicts = []
 let n = 0
-for (const f of readdirSync(join(src, "agents")).filter((f) => f.endsWith(".md"))) {
-  const out = convertAgent(readFileSync(join(src, "agents", f), "utf8"), f)
-  writeFileSync(join(agentsDir, f), out)
-  console.log(`agent   ${f}`)
-  n++
-}
-for (const f of readdirSync(join(src, "commands")).filter((f) => f.endsWith(".md"))) {
-  const out = convertCommand(readFileSync(join(src, "commands", f), "utf8"))
-  writeFileSync(join(promptsDir, f), out)
-  console.log(`command ${f} -> prompts/${f}`)
+function install(dir, file, content, label) {
+  const to = join(dir, file)
+  if (!force && existsSync(to) && readFileSync(to, "utf8") !== content) {
+    conflicts.push(file)
+    return
+  }
+  writeFileSync(to, content)
+  console.log(`${label} ${file}`)
   n++
 }
 
+for (const f of readdirSync(join(src, "agents")).filter((f) => f.endsWith(".md"))) {
+  const out = convertAgent(readFileSync(join(src, "agents", f), "utf8"), f)
+  install(agentsDir, prefix + f, out, "agent  ")
+}
+for (const f of readdirSync(join(src, "commands")).filter((f) => f.endsWith(".md"))) {
+  const out = convertCommand(readFileSync(join(src, "commands", f), "utf8"))
+  install(promptsDir, prefix + f, out, "command")
+}
+
 console.log(`\n✅ ${n} files installed to ${dest}`)
+if (conflicts.length) {
+  console.log(`⚠ ${conflicts.length} file(s) left untouched because they already exist with different content:`)
+  for (const file of conflicts) console.log(`    ${file}`)
+  console.log("  Re-run with --force to overwrite them, or with --prefix <p> to install alongside.")
+}
 console.log(`⚠ AGENTS.md is not merged automatically: review ${join(src, "AGENTS.md")} and reconcile it into your ~/.pi/agent/AGENTS.md manually.`)
 console.log("⚠ Model routing: pi resolves models via ~/.pi/agent/subagents.json (model_profiles); no model pins are written.")
