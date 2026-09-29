@@ -114,15 +114,14 @@ review.
   (`/sdd-*`), orchestrated judgment-day review, telemetry and the
   review-transport plugin are excluded. pi on this machine still runs gentle-pi;
   the two config trees are independent.
-- **`~/.config/opencode` files that stay local**, by decision:
-  - `plugins/engram.ts` plus the `mcp.engram` entry in `opencode.json`: the bridge
-    to the `gentle-engram` package that ships the `engram` binary
-    (`~/.local/bin/engram`). Same provenance as gentle-ai, so it is out of the
-    portable set — a machine without that package has nothing to connect to.
-  - `plugins/orca-opencode-status.js`: machine-specific statusline, yours.
-  - `themes/gentleman.json`, `themes/gentleman-cute.json`: themes from the gentle-ai
-    persona. No config file references them (OpenCode picks a theme from TUI state),
-    so porting them would buy nothing.
+- **gentle-ai provenance, purged from the live config as well**: `plugins/engram.ts`,
+  the `mcp.engram` entry in `opencode.json` and `themes/gentleman{,-cute}.json`. The
+  engram bridge belongs to the `gentle-engram` package (its Go binary lives outside the
+  config tree, at `~/.local/bin/engram`), which a portable setup does not install, and
+  the themes came from the gentle-ai persona without any config file referencing them.
+  Purging them costs OpenCode its memory tools; pi keeps its own gentle-engram memory.
+- **`plugins/orca-opencode-status.js`**: the user's own statusline, machine-specific.
+  It stays in the live config and is deliberately not portable.
 - **Kit-owned plugins** — `mission-runtime.ts`, `mission-runtime.test.mjs`,
   `oak-tui/`, `open-design.ts`, `shell-export-guard.ts`, `token-tree-usage.tsx` —
   arrive with `make install-oak`. They are not local files to preserve; an earlier

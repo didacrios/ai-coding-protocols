@@ -14,14 +14,6 @@
       "enabled": true,
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
-    },
-    "engram": {
-      "command": [
-        "engram",
-        "mcp",
-        "--tools=agent"
-      ],
-      "type": "local"
     }
   },
   "provider": {
