@@ -88,8 +88,8 @@ This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/projec
 
 - **Own skills** live in `skills/` and are installed with
   `npx skills add didacrios/ai-coding-protocols`.
-- **Third-party dependencies** (e.g. `mattpocock/skills`) are declared, never
-  committed. Install them with:
+- **Third-party dependencies** (`addyosmani/agent-skills`, `mattpocock/skills`)
+  are declared, never committed. Install them with:
 
   ```bash
   make install-skills        # or: node scripts/install-skills.mjs --list
@@ -98,6 +98,13 @@ This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/projec
   The installer drives [`npx skills add`](https://github.com/vercel-labs/skills)
   per declared skill; the CLI lockfile (`~/.agents/.skill-lock.json`) tracks
   sources and `npx skills check` / `skills update` detect upstream changes.
+
+  Dependencies are pinned to a tag/ref in `skills.json` for reproducibility.
+  The engineering skills came from `addyosmani/agent-skills` (MIT, 25-skill
+  catalog) — pinned to `0.6.11`. Earlier copies of these skills were vendored
+  through `stanfish06/skillquarium` (an unlicensed curated mirror) and adapted
+  by the opencode harness; those adapted copies were removed in favor of the
+  canonical upstream.
 
 ### OpenCode / pi dev workflow
 
