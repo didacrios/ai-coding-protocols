@@ -1,0 +1,10 @@
+final_verdict: reviewer
+lenses:
+  - id: quality
+    description: "Correctness, bugs, maintainability, and concrete regression risk."
+  - id: security
+    description: "Auth, secrets, supply chain, migrations, and infrastructure."
+  - id: tests
+    description: "Regression evidence, fragile tests, and insufficient validation."
+  - id: api
+    description: "Public contracts, schemas, compatibility, and errors."

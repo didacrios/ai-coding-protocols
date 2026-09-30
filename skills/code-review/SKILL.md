@@ -119,6 +119,7 @@ Cross-reference every diff against these checks:
 ## Integration
 - Depends on: `recursive-exploration` (tracing methodology), `typescript-standard` or `php-standard` (quality gates)
 - Related: `refactor` (for implementing suggested refactors)
+- Related: catalog `reviewer` (`catalog/agents/reviewer.md`) is the agent verdict for `/review` and `/full`. This skill is GitHub-comment tone only. Do not mix emoji tags with catalog verdicts in one pass.
 
 ---
 *References: [Emoji Code (dev.to)](https://dev.to/juanvegadev/start-doing-better-code-reviews-tomorrow-the-emoji-code-3jf6), [Code Review Emoji Guide (GitHub)](https://github.com/erikthedeveloper/code-review-emoji-guide)*

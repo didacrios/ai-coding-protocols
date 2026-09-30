@@ -37,6 +37,18 @@ _Avoid_: planner as a second agent name
 The orchestrator. Routes and synthesizes; does not implement.
 _Avoid_: parent session, gentleman as the catalog entry agent
 
+**Reviewer**:
+Read-only final review of a pinned git diff (`diff_base`). Lists every changed file as reviewed or skipped, attacks along nine dimensions, fact-checks findings, and returns a catalog verdict. Does not edit.
+_Avoid_: emoji review skill, receipt, lineage, specialist reviewer as this role
+
+**Coverage**:
+The reviewer's file accounting: `coverage: files_in_change=<n> reviewed=<n> skipped=<n>`. A skip needs a concrete reason (generated file, lockfile).
+_Avoid_: "looked minor", reviewing one file as covering its tests or counterpart
+
+**Lens**:
+An optional `/review` focus (`quality`, `security`, `tests`, `api`) declared in `catalog/lenses.yaml`. Adapters copy it into harness commands. It is not an agent and cannot emit a final verdict.
+_Avoid_: specialist reviewer, review_quality, coordinator as catalog roster roles
+
 **Harness**:
 A runtime that consumes adapter output (Pi, OpenCode v2).
 _Avoid_: model, provider

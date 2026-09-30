@@ -17,6 +17,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Catalog `reviewer` now requires file coverage, a pinned `diff_base`, nine attack dimensions, and a fact-check. `/review` and `lead` handoffs pin the git diff; `lead` must not review a diff it or `developer` produced. `skills/code-review` stays a separate emoji comment protocol.
+- `catalog/lenses.yaml` plus `/review` optional focus (`quality`, `security`, `tests`, `api`). Pi and OpenCode adapters inject the lens list into the review command; the roster stays eight agents.
 - Community skills are declared in `skills.json` (consumer step: `make install-skills`), matching addyosmani and mattpocock. `muratcankoylan/Agent-Skills-for-Context-Engineering` (7 skills, pin `6dbe1a1`) and `coreyhaines31/marketingskills` (35 skills, pin `5b2c000`) are dependencies, not copies in `skills/`.
 - `template/SKILL.md` renamed to `template/SKILL.template.md` so the skills CLI does not treat the scaffold as an installable skill named `skill-name`.
 - Portable agents come only from `catalog/`. Attribution for adapted contracts is in README Credits and `NOTICE`.

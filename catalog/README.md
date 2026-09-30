@@ -19,6 +19,7 @@ Adapters turn these YAML files into Pi or OpenCode v2 Markdown. Edit the catalog
 | `catalog/agents/*.md` | Shared prompt body |
 | `catalog/workflows/*.yaml` | Ordered stages and required agents |
 | `catalog/commands/*.yaml` | Slash-command alias: a workflow or a single agent |
+| `catalog/lenses.yaml` | Optional `/review` focus lenses; `reviewer` stays the only final verdict |
 
 ## Adapters
 
@@ -54,7 +55,17 @@ Neither adapter pins a model. Live `~/.pi` and `~/.config/opencode` are never th
 | `/docs` | `technical-writer` | agent |
 | `/publish` | `publisher` | agent |
 
+`/review` accepts an optional first token `quality`, `security`, `tests`, or `api` (see `catalog/lenses.yaml`). Default is all nine dimensions. Coverage and one catalog verdict still apply.
+
 Workflow ids stay descriptive. Slash names stay short.
+
+## Review surfaces
+
+`/review` and the `review` stage in `/full` use the catalog `reviewer`: coverage of every changed file, a pinned `diff_base`, nine attack dimensions, and a fact-check. Optional focus lenses (`quality`, `security`, `tests`, `api`) narrow the attack; they do not create specialist agents and they do not emit a partial verdict. Adapters inject the lens list into the rendered `/review` command. An OpenCode-only prepare script plus specialist files can be a later adapter extra; it is not in this catalog roster.
+
+Verdicts are `approved`, `approved with observations`, `requires changes`, or `blocked`. Only introduced or worsened issues block.
+
+`skills/code-review` is a separate GitHub-comment protocol (emoji prefixes). It is not the catalog agent verdict. Do not mix the two in one pass.
 
 ## Checklist
 

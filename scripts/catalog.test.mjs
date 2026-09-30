@@ -216,6 +216,75 @@ test("reviewer prompt requires causality and a blocked verdict", () => {
   assert.match(prompt, /Performance/)
 })
 
+test("reviewer prompt requires coverage, pinned candidate, and fact-check", () => {
+  const prompt = loadCatalog(catalogDir).agents.get("reviewer").prompt
+  assert.match(prompt, /coverage: files_in_change=/)
+  assert.match(prompt, /diff_base/)
+  assert.match(prompt, /file:line/)
+  assert.match(prompt, /Assumptions/)
+  assert.match(prompt, /Authorization/)
+  assert.match(prompt, /Spec drift/)
+  assert.match(prompt, /The construct it names does not exist/)
+  assert.match(prompt, /A line of the diff literally contradicts it/)
+  assert.match(prompt, /developer summary/)
+})
+
+test("lead handoff pins diff_base and never substitutes for reviewer", () => {
+  const prompt = loadCatalog(catalogDir).agents.get("lead").prompt
+  assert.match(prompt, /diff_base/)
+  assert.match(prompt, /Do not review a diff you or `developer` produced/)
+})
+
+test("review command pins the git diff candidate", () => {
+  const catalog = loadCatalog(catalogDir)
+  const command = catalog.commands.get("review")
+  assert.match(command.invoke, /pinned/)
+  assert.match(command.invoke, /diff_base/)
+  assert.match(command.invoke, /git diff/)
+})
+
+test("catalog loads four review lenses; reviewer stays the only final verdict", () => {
+  const catalog = loadCatalog(catalogDir)
+  assert.equal(catalog.lenses.final_verdict, "reviewer")
+  assert.deepEqual(
+    catalog.lenses.items.map((lens) => lens.id),
+    ["quality", "security", "tests", "api"],
+  )
+  assert.equal(catalog.agents.size, 8)
+})
+
+test("reviewer prompt requires optional focus lenses without a partial verdict", () => {
+  const prompt = loadCatalog(catalogDir).agents.get("reviewer").prompt
+  assert.match(prompt, /## Focus/)
+  assert.match(prompt, /quality/)
+  assert.match(prompt, /security/)
+  assert.match(prompt, /tests/)
+  assert.match(prompt, /api/)
+  assert.match(prompt, /Do not emit a partial verdict/)
+})
+
+test("review command argument hint names the four lenses", () => {
+  const hint = loadCatalog(catalogDir).commands.get("review").argument_hint
+  assert.match(hint, /quality/)
+  assert.match(hint, /security/)
+  assert.match(hint, /tests/)
+  assert.match(hint, /api/)
+})
+
+test("both adapters inject review lenses into the review command", () => {
+  const catalog = loadCatalog(catalogDir)
+  const command = catalog.commands.get("review")
+  const pi = adaptPiCommand(command, undefined, catalog)
+  const oc = adaptOpencodeCommand(command, undefined, catalog)
+  for (const rendered of [pi, oc]) {
+    assert.match(rendered, /quality/)
+    assert.match(rendered, /security/)
+    assert.match(rendered, /tests/)
+    assert.match(rendered, /api/)
+    assert.match(rendered, /final verdict/)
+  }
+})
+
 test("render-catalog writes separate pi and opencode trees without touching HOME", () => {
   const dest = mkdtempSync(join(tmpdir(), "catalog-render-"))
   try {

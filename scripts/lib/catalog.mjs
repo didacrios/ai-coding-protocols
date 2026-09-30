@@ -24,8 +24,9 @@ export function loadCatalog(root) {
   const agents = loadAgents(join(root, "agents"))
   const workflows = loadNamed(join(root, "workflows"), loadWorkflow)
   const commands = loadNamed(join(root, "commands"), loadCommand)
-  validateCatalog({ agents, workflows, commands })
-  return { root, agents, workflows, commands }
+  const lenses = loadLenses(join(root, "lenses.yaml"))
+  validateCatalog({ agents, workflows, commands, lenses })
+  return { root, agents, workflows, commands, lenses }
 }
 
 function loadAgents(dir) {
@@ -97,8 +98,29 @@ function loadCommand(spec, file) {
   return spec
 }
 
-function validateCatalog({ agents, workflows, commands }) {
+function loadLenses(file) {
+  const spec = parseYaml(readFileSync(file, "utf8"))
+  if (!spec.final_verdict) throw new Error("lenses.yaml: missing final_verdict")
+  if (!Array.isArray(spec.lenses) || spec.lenses.length === 0) {
+    throw new Error("lenses.yaml: lenses must be a non-empty list")
+  }
+  const seen = new Set()
+  const items = spec.lenses.map((lens, index) => {
+    if (!lens.id || !lens.description) {
+      throw new Error(`lenses.yaml: lens ${index} needs id and description`)
+    }
+    if (seen.has(lens.id)) throw new Error(`lenses.yaml: duplicate lens "${lens.id}"`)
+    seen.add(lens.id)
+    return { id: lens.id, description: String(lens.description) }
+  })
+  return { final_verdict: spec.final_verdict, items }
+}
+
+function validateCatalog({ agents, workflows, commands, lenses }) {
   if (!agents.has("lead")) throw new Error("catalog: missing lead agent")
+  if (lenses && !agents.has(lenses.final_verdict)) {
+    throw new Error(`lenses.yaml: unknown final_verdict agent ${lenses.final_verdict}`)
+  }
   for (const workflow of workflows.values()) {
     if (!agents.has(workflow.entry)) {
       throw new Error(`workflow ${workflow.id}: unknown entry agent ${workflow.entry}`)
@@ -138,7 +160,25 @@ export function workflowAgents(catalog) {
   return [...names]
 }
 
-export function renderAgentCommandPrompt(command, argumentToken) {
+export function renderReviewLensBlock(lenses) {
+  if (!lenses?.items?.length) return ""
+  const ids = lenses.items.map((lens) => lens.id).join(" | ")
+  const lines = [
+    "## Review lenses",
+    "",
+    `Optional first token of the argument is a focus lens: ${ids}. Default: all nine dimensions.`,
+    "Coverage of every changed file and one catalog final verdict are still required. Do not emit a partial verdict.",
+    "",
+  ]
+  for (const lens of lenses.items) {
+    lines.push(`- \`${lens.id}\`: ${lens.description}`)
+  }
+  lines.push("")
+  return lines.join("\n")
+}
+
+export function renderAgentCommandPrompt(command, argumentToken, catalog) {
+  const extra = command.id === "review" ? renderReviewLensBlock(catalog?.lenses) : ""
   return [
     `Delegate this work to \`${command.agent}\`. Do not do that agent's job yourself unless you are \`${command.agent}\`.`,
     "",
@@ -146,6 +186,7 @@ export function renderAgentCommandPrompt(command, argumentToken) {
     "",
     argumentToken,
     "",
+    extra,
     "Wait for the full result when this runs as a subagent. Then synthesize the outcome and the next step.",
     "",
   ].join("\n")
