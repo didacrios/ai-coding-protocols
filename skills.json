@@ -2,21 +2,21 @@
   "name": "ai-coding-protocols",
   "description": "Manifest of agent skills: own skills (in skills/) plus third-party dependencies installed via the skills CLI (npx skills add). Third-party skills are declared, never committed.",
   "own": {
-    "note": "Auto-discovered from skills/ — each directory with a SKILL.md. Install with: npx skills add didacrios/ai-coding-protocols",
-    "adapted": {
-      "muratcankoylan/Agent-Skills-for-Context-Engineering": [
-        "context-fundamentals",
-        "context-compression",
-        "context-optimization",
-        "filesystem-context",
-        "project-development",
-        "tool-design",
-        "evaluation"
-      ],
-      "coreyhaines31/marketingskills": [
-        "marketing/*"
-      ]
-    }
+    "note": "Authored in this repository. Auto-discovered from skills/ — each directory with a SKILL.md. template/ is a scaffold (SKILL.template.md), not a skill. Install own skills with: npx skills add didacrios/ai-coding-protocols (GitHub, after this branch is pushed) or npx skills add <local-clone> while unpushed. recursive-exploration, typescript-standard, php-standard, code-review, refactor, documentation, skill-generator, and project-bootstrap landed in 2da73d6 (2026-02-26) when protocols/ became skills/. plan-initiative landed in 7552f1c (2026-04-10).",
+    "inspired_by": {
+      "recursive-exploration": "MIT CSAIL Recursive Language Models (https://arxiv.org/pdf/2512.24601) — idea, not a copied skill file"
+    },
+    "skills": [
+      "recursive-exploration",
+      "typescript-standard",
+      "php-standard",
+      "code-review",
+      "refactor",
+      "documentation",
+      "plan-initiative",
+      "skill-generator",
+      "project-bootstrap"
+    ]
   },
   "dependencies": [
     {
@@ -59,6 +59,92 @@
         "productivity/handoff"
       ],
       "note": "code-review exists in both repos; only one is installed (own emoji-driven variant lives in skills/code-review)"
+    },
+    {
+      "source": "muratcankoylan/Agent-Skills-for-Context-Engineering",
+      "ref": "6dbe1a1d868eab51a3bc9011b0f55e2891513e40",
+      "base": "skills",
+      "license": "MIT",
+      "copyright": "2025 Context Engineering Agent Skills Contributors",
+      "url": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering",
+      "skills": [
+        "context-fundamentals",
+        "context-compression",
+        "context-optimization",
+        "filesystem-context",
+        "project-development",
+        "tool-design",
+        "evaluation"
+      ],
+      "note": "MIT. Previously vendored under skills/<name>/ (commit 2da73d6). Removed from this tree so the installer fetches upstream. Pin is upstream HEAD observed 2026-08-10. Local SKILL.md copies had no SPDX; declaring instead of vendoring closes the missing-NOTICE gap."
+    },
+    {
+      "source": "coreyhaines31/marketingskills",
+      "ref": "5b2c0007766c6a1cf1d53fd8fc73e979e0821022",
+      "base": "skills",
+      "license": "MIT",
+      "copyright": "2025 Corey Haines",
+      "url": "https://github.com/coreyhaines31/marketingskills",
+      "upstream_release_observed": "2.11.1",
+      "skills": [
+        "ab-testing",
+        "ad-creative",
+        "ads",
+        "ai-seo",
+        "analytics",
+        "aso",
+        "churn-prevention",
+        "cold-email",
+        "community-marketing",
+        "competitors",
+        "content-strategy",
+        "copy-editing",
+        "copywriting",
+        "cro",
+        "customer-research",
+        "emails",
+        "free-tools",
+        "launch",
+        "lead-magnets",
+        "marketing-ideas",
+        "marketing-psychology",
+        "onboarding",
+        "paywalls",
+        "popups",
+        "pricing",
+        "product-marketing",
+        "programmatic-seo",
+        "referrals",
+        "revops",
+        "sales-enablement",
+        "schema",
+        "seo-audit",
+        "signup",
+        "site-architecture",
+        "social"
+      ],
+      "former_local_name_map": {
+        "ab-test-setup": "ab-testing",
+        "analytics-tracking": "analytics",
+        "aso-audit": "aso",
+        "competitor-alternatives": "competitors",
+        "email-sequence": "emails",
+        "form-cro": "cro",
+        "free-tool-strategy": "free-tools",
+        "launch-strategy": "launch",
+        "onboarding-cro": "onboarding",
+        "page-cro": "cro",
+        "paid-ads": "ads",
+        "paywall-upgrade-cro": "paywalls",
+        "popup-cro": "popups",
+        "pricing-strategy": "pricing",
+        "product-marketing-context": "product-marketing",
+        "referral-program": "referrals",
+        "schema-markup": "schema",
+        "signup-flow-cro": "signup",
+        "social-content": "social"
+      },
+      "note": "MIT. Previously vendored under skills/marketing/ (commit 43defc2) with older directory names and metadata.version 1.0–1.3. Removed from this tree so the installer fetches upstream 2.x names. Pin is upstream HEAD observed 2026-09-05 (release 2.11.1). form-cro and page-cro both mapped to cro, so the declared set is 35 unique names from the former 36 local directories. Foundation skill is product-marketing."
     }
   ]
 }

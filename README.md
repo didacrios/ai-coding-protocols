@@ -12,11 +12,11 @@ The repository uses a skills-based architecture following the [SKILL.md specific
 
 ```
 ai-coding-protocols/
-├── skills/                   # Self-contained skill definitions (ours)
+├── skills/                   # Own skill definitions only
 ├── skills.json               # Third-party skill manifest (declare, don't vendor)
 ├── harness/                  # Local OpenCode overlay (harness itself: OAK kit)
 ├── blueprints/               # Tool-specific integration configs
-├── template/                 # Canonical SKILL.md template
+├── template/                 # Canonical SKILL.md template (not an installable skill)
 ├── scripts/                  # Installers, harness conversion, gentle-ai purge
 └── Makefile                  # Install + vendor commands
 ```
@@ -35,38 +35,12 @@ ai-coding-protocols/
 | `documentation` | In-code and system docs using Diataxis framework | docs, documentation, tsdoc, phpdoc |
 | `plan-initiative` | Initiative framing protocol for Engineering Managers with strict discovery and scope boundaries | initiative, kickoff, scope, framing, epics |
 
-#### Context Engineering Skills (adapted from [Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering))
-
-| Skill | Description | Triggers |
-|-------|-------------|----------|
-| `context-fundamentals` | Attention budgets, progressive disclosure, context quality vs quantity | context, attention, progressive-disclosure |
-| `filesystem-context` | Filesystem as persistent context layer: scratch pads, plan persistence, offloading | filesystem, scratch-pad, plan-persistence |
-| `project-development` | Task-model fit, pipeline architecture, cost estimation, agent-assisted dev | project, pipeline, task-model-fit |
-| `context-optimization` | Compaction, observation masking, KV-cache optimization, partitioning | context-limit, optimization, compaction |
-| `context-compression` | Anchored summarization, compression timing, artifact trail preservation | compression, summarization, long-session |
-| `tool-design` | Designing effective MCP tools, descriptions as prompts, consolidation principle | tool-design, mcp, agent-tools |
-| `evaluation` | Outcome-focused evaluation, multi-dimensional rubrics, LLM-as-judge | evaluation, testing, quality, metrics |
-
 #### Meta Skills
 
 | Skill | Description | Triggers |
 |-------|-------------|----------|
 | `skill-generator` | Meta-skill for creating new project-specific skills as the codebase evolves | new-skill, generate-skill, new-module, new-pattern |
 | `project-bootstrap` | Initial project analysis — detects stack, conventions, generates project-overview skill | bootstrap, init, setup, first-run |
-
-#### Marketing Skills (adapted from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills))
-
-Vendored under `skills/marketing/`. These skills follow the [Agent Skills spec](https://agentskills.io/specification.md): triggers are embedded in the `description` field (no explicit `triggers:` array) and version lives under `metadata.version`. The foundation skill `product-marketing-context` is read first by every other marketing skill. See [`blueprints/marketing.md`](blueprints/marketing.md) for the full operational protocol.
-
-| Category | Skills |
-|----------|--------|
-| **SEO & Content** | `seo-audit`, `ai-seo`, `site-architecture`, `programmatic-seo`, `schema-markup`, `content-strategy` |
-| **CRO** | `page-cro`, `signup-flow-cro`, `onboarding-cro`, `form-cro`, `popup-cro`, `paywall-upgrade-cro` |
-| **Content & Copy** | `copywriting`, `copy-editing`, `cold-email`, `email-sequence`, `social-content` |
-| **Paid & Measurement** | `paid-ads`, `ad-creative`, `ab-test-setup`, `analytics-tracking` |
-| **Growth & Retention** | `referral-program`, `free-tool-strategy`, `churn-prevention`, `community-marketing`, `lead-magnets` |
-| **Sales & GTM** | `revops`, `sales-enablement`, `launch-strategy`, `pricing-strategy`, `competitor-alternatives`, `aso-audit` |
-| **Strategy & Research** | `marketing-ideas`, `marketing-psychology`, `customer-research`, `product-marketing-context` |
 
 ### Blueprints
 
@@ -89,10 +63,12 @@ This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/projec
 
 `skills.json` declares what is owned versus what is consumed:
 
-- **Own skills** live in `skills/` and are installed with
-  `npx skills add didacrios/ai-coding-protocols`.
-- **Third-party dependencies** (`addyosmani/agent-skills`, `mattpocock/skills`)
-  are declared, never committed. Install them with:
+- **Own skills** live in `skills/` (nine authored skills). After this branch
+  is pushed, install them with `npx skills add didacrios/ai-coding-protocols`.
+  `template/` is a copy-from scaffold (`SKILL.template.md`), not a skill.
+- **Third-party dependencies** (`addyosmani/agent-skills`, `mattpocock/skills`,
+  `muratcankoylan/Agent-Skills-for-Context-Engineering`,
+  `coreyhaines31/marketingskills`) are declared, never committed. Install them with:
 
   ```bash
   make install-skills        # or: node scripts/install-skills.mjs --list
@@ -111,6 +87,12 @@ This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/projec
   which owns the OpenCode workflow; `scripts/install-skills.mjs` skips those when the
   kit is present so one skill name never resolves to two different bodies
   (`--include-kit-overlap` installs them on a machine without the kit).
+  Context-engineering skills come from
+  `muratcankoylan/Agent-Skills-for-Context-Engineering` (MIT, pin
+  `6dbe1a1`). Marketing skills come from `coreyhaines31/marketingskills`
+  (MIT, pin `5b2c000`, release 2.11.1); former local names such as
+  `page-cro` map to current upstream names (`cro`). See
+  [`blueprints/marketing.md`](blueprints/marketing.md).
 
 ### OpenCode / pi dev workflow
 
@@ -158,15 +140,15 @@ Use the template:
 
 ```bash
 mkdir skills/my-new-skill
-cp template/SKILL.md skills/my-new-skill/SKILL.md
+cp template/SKILL.template.md skills/my-new-skill/SKILL.md
 ```
 
 Each SKILL.md includes: frontmatter metadata, activation triggers, detailed guidance, examples, verifiable guidelines, and integration references.
 
 ## Credits
 
-- **SKILL.md format and Context Engineering skills** adapted from [Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering) by Muratcan Koylan (MIT License)
-- **Marketing skills** adapted from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) by Corey Haines (MIT License)
+- **SKILL.md format** from [Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering) by Muratcan Koylan (MIT License). The seven context-engineering skills are declared in `skills.json`, not vendored.
+- **Marketing skills** from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) by Corey Haines (MIT License), declared in `skills.json`
 - **Recursive Language Modeling** inspired by MIT CSAIL research on [Recursive Language Models](https://arxiv.org/pdf/2512.24601)
 
 ---

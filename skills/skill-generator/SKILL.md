@@ -42,7 +42,7 @@ Before writing the skill file:
 
 ### Generation
 
-Create the skill file at `.ai/skills/project/{domain}/SKILL.md` using the canonical template from `.ai/template/SKILL.md`.
+Create the skill file at `.ai/skills/project/{domain}/SKILL.md` using the canonical template from `.ai/template/SKILL.template.md`.
 
 **Naming convention:**
 - Use the domain name as the directory: `.ai/skills/project/{domain}/SKILL.md`
@@ -112,14 +112,14 @@ triggers: [event, event-bus, handler, listener, dispatch]
 2. Always check existing skills for overlap before creating a new one
 3. Place project-specific skills in `.ai/skills/project/`, never in the vendored skills root
 4. Include at least one real code example from the project
-5. Use the canonical template structure from `.ai/template/SKILL.md`
+5. Use the canonical template structure from `.ai/template/SKILL.template.md`
 6. Start version at `1.0.0` and increment on updates
 7. Keep skills focused — one domain per skill, not a catch-all
 
 ## Integration
 - Depends on: `recursive-exploration` (for codebase scanning during analysis phase)
 - Related: `project-bootstrap` (generates the initial project skill; skill-generator handles ongoing evolution)
-- Template: `.ai/template/SKILL.md` (canonical structure for all generated skills)
+- Template: `.ai/template/SKILL.template.md` (canonical structure for all generated skills; not an installable skill)
 
 ## Skill Metadata
 - Created: 2025-07-01

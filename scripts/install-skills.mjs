@@ -75,6 +75,7 @@ if (kit.sources.length) {
 }
 
 let failures = 0
+let attempted = 0
 const skipped = []
 
 console.log(`\nManifest: ${manifest.name}\n`)
@@ -90,7 +91,8 @@ for (const dep of manifest.dependencies ?? []) {
     }
     const ref = dep.ref ?? "main"
     const url = `https://github.com/${dep.source}/tree/${ref}${base}/${skill}`
-    console.log(`Installing ${dep.source}/${skill}`)
+    attempted++
+    console.log(`${dryRun ? "Would install" : "Installing"} ${dep.source}/${skill}`)
     const r = run("npx", ["-y", "skills@latest", "add", url])
     if (r.status !== 0) {
       failures++
@@ -110,9 +112,17 @@ if (withUpdate && !dryRun) {
   run("npx", ["-y", "skills@latest", "update"])
 }
 
-console.log(
-  failures === 0
-    ? "\n✅ All declared skills installed. Own skills: npx skills add didacrios/ai-coding-protocols"
-    : `\n⚠ ${failures} install(s) failed — see output above.`
-)
+if (dryRun) {
+  console.log(
+    `\nListed ${attempted} skill URL(s)` +
+      (skipped.length ? `, skipped ${skipped.length} kit overlap(s)` : "") +
+      ". Nothing was installed."
+  )
+} else {
+  console.log(
+    failures === 0
+      ? "\n✅ All declared skills installed. Own skills: npx skills add didacrios/ai-coding-protocols"
+      : `\n⚠ ${failures} install(s) failed — see output above.`
+  )
+}
 process.exit(failures === 0 ? 0 : 1)

@@ -14,7 +14,7 @@ purge tooling and the skill manifest.
 
 | Component | Source | Destination |
 |-----------|--------|-------------|
-| Skills (own + adapted) | `skills/` | via `npx skills add didacrios/ai-coding-protocols` |
+| Skills (own) | `skills/` | via `npx skills add didacrios/ai-coding-protocols` |
 | Third-party skills | `skills.json` dependencies | via `npx skills add <upstream>` (never committed) |
 | Agents (15) + commands (18) | OAK kit payload | `~/.config/opencode/{agents,commands}/` via `oak install` |
 | Kit docs + contracts | OAK kit payload | `~/.config/opencode/docs/ai/` via `oak install` |

@@ -10,6 +10,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - `skills/plan-initiative/SKILL.md` — Initiative framing protocol for Engineering Managers with strict-stop discovery, explicit scope boundaries, and a single initiative-brief output.
 
+### Changed
+
+- Community skills are declared in `skills.json` (consumer step: `make install-skills`), matching addyosmani and mattpocock. `muratcankoylan/Agent-Skills-for-Context-Engineering` (7 skills, pin `6dbe1a1`) and `coreyhaines31/marketingskills` (35 skills, pin `5b2c000`) are dependencies, not copies in `skills/`.
+- `template/SKILL.md` renamed to `template/SKILL.template.md` so the skills CLI does not treat the scaffold as an installable skill named `skill-name`.
+
+### Removed
+
+- Vendored copies of seven context-engineering skills under `skills/` (`context-fundamentals`, `context-compression`, `context-optimization`, `filesystem-context`, `project-development`, `tool-design`, `evaluation`).
+- Vendored `skills/marketing/` tree (36 local directories). Upstream names differ; see `former_local_name_map` in `skills.json`.
+
 ## [1.0.0] — 2026-02-26
 
 ### Added
