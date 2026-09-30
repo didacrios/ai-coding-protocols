@@ -1,0 +1,14 @@
+id: reviewer
+description: "Code review agent — audits diffs, security, and correctness. Never edits files."
+role: read-only
+mode: subagent
+capabilities:
+  - read
+  - bash
+  - mcp
+harness:
+  pi:
+    extra_tools:
+      - mcp
+  opencode:
+    web_effect: ask

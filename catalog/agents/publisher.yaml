@@ -1,0 +1,34 @@
+id: publisher
+description: "Delivery agent — git, commits, pushes, and pull requests. Does not implement features."
+role: read-only
+mode: subagent
+capabilities:
+  - read
+  - bash
+  - mcp
+harness:
+  pi:
+    extra_tools:
+      - mcp
+  opencode:
+    shell_default: ask
+    shell_allow:
+      - "git status*"
+      - "git diff*"
+      - "git log*"
+      - "git add *"
+      - "git commit -m *"
+      - "git fetch*"
+      - "git pull*"
+      - "npm test*"
+      - "pnpm test*"
+      - "npm run test*"
+      - "node --test*"
+    shell_deny:
+      - "git add -A*"
+      - "git add --all*"
+      - "git add ."
+      - "git reset --hard*"
+      - "git push origin main*"
+      - "git push origin master*"
+      - "git branch -D*"

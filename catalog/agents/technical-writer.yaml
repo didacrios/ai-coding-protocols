@@ -1,0 +1,20 @@
+id: technical-writer
+description: "Documentation agent — READMEs, ADRs, API docs, changelogs. Documentation files only."
+role: writer
+mode: subagent
+capabilities:
+  - read
+  - bash
+  - edit
+  - mcp
+harness:
+  pi:
+    extra_tools:
+      - mcp
+  opencode:
+    edit_allow:
+      - "**/*.md"
+      - "**/*.mdx"
+      - "**/docs/**"
+      - "**/README*"
+      - "**/CHANGELOG*"

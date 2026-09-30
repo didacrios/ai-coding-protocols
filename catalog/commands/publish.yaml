@@ -1,0 +1,6 @@
+id: publish
+description: "Git, commits, pushes, or pull requests."
+agent: publisher
+subtask: true
+argument_hint: "<instruction>"
+invoke: "Deliver this:"

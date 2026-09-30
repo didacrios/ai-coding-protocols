@@ -1,0 +1,7 @@
+{
+  "$comment": "Merged into live package.json. Object keys merge; this fragment only overrides @opencode-ai/plugin and adds opencode-subagent-statusline. engines, overrides, and @opentui/* stay as they are in the target. package-lock.json is regenerated with npm install --ignore-scripts --legacy-peer-deps — never vendored.",
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.18.23",
+    "opencode-subagent-statusline": "^1.3.0"
+  }
+}

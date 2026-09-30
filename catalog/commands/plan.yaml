@@ -1,0 +1,6 @@
+id: plan
+description: "Turn an objective into a spec and implementable tasks."
+agent: specifier
+subtask: true
+argument_hint: "<objective>"
+invoke: "Specify this work:"

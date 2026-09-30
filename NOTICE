@@ -1,0 +1,32 @@
+# Notices
+
+This repository includes original work (catalog YAML, adapters, own skills)
+and adapted material.
+
+## Adapted from opencode-agent-orchestration-kit
+
+Catalog agent roles, several operational contracts, and the lite/full
+workflow idea were adapted from:
+
+https://github.com/jcarlosrodicio/opencode-agent-orchestration-kit
+
+Copyright jcarlosrodicio
+Licensed under the Apache License, Version 2.0.
+A copy of that license is in `licenses/opencode-agent-orchestration-kit.Apache-2.0.txt`.
+
+This catalog is a modified work: harness-agnostic YAML, Pi and OpenCode v2
+adapters, short slash aliases, and prompts that omit kit-specific installers,
+skill names, and tools.
+
+The following notices appear in that project's `NOTICE.md`:
+
+opencode-agent-orchestration-kit provides configuration, prompts, wrappers,
+documentation, and optional Docker helpers for OpenCode-oriented agent
+orchestration.
+
+That repository does not claim affiliation with the upstream projects listed
+below.
+
+- OpenCode: https://github.com/anomalyco/opencode (MIT)
+- Open Design: https://github.com/nexu-io/open-design (Apache-2.0)
+- Impeccable: https://github.com/pbakaus/impeccable (Apache-2.0)

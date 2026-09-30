@@ -6,15 +6,17 @@ mode: Agentic
 
 # Marketing Operational Protocol
 
-Drop-in protocol for AI agents performing marketing work — copywriting, CRO, SEO, paid ads, growth, sales enablement, and strategy — using the vendored skills at `./.ai/skills/marketing/`.
+Drop-in protocol for AI agents performing marketing work — copywriting, CRO, SEO, paid ads, growth, sales enablement, and strategy — using the [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) catalog declared in `skills.json`.
+
+Install them with `make install-skills`. They land in `~/.agents/skills/` under the **upstream names** (not the old local names such as `page-cro`).
 
 ## 1. Foundation Skill
 
-The `product-marketing-context` skill is the **foundation**. Every other marketing skill reads it first to understand the product, audience, and positioning before acting.
+The `product-marketing` skill is the **foundation**. Every other marketing skill reads it first to understand the product, audience, and positioning before acting.
 
 1. Check for a project-level context file first: `.agents/product-marketing-context.md` (or `.claude/product-marketing-context.md` in legacy setups).
-2. If missing, activate `./.ai/skills/marketing/product-marketing-context/SKILL.md` to generate one with the user.
-3. Only then proceed with task-specific skills (copywriting, page-cro, seo-audit, etc.).
+2. If missing, activate `product-marketing` from the installed skills to generate one with the user.
+3. Only then proceed with task-specific skills (`copywriting`, `cro`, `seo-audit`, etc.).
 
 ## 2. Format Note (Agent Skills Spec)
 
@@ -30,8 +32,10 @@ Activation is discovery-driven: the agent matches the user's request against the
 
 ## 3. Skill Layout
 
+Installed globally (not copied into `.ai/`):
+
 ```
-.ai/skills/marketing/<skill-name>/
+~/.agents/skills/<upstream-name>/
 ├── SKILL.md              # Main instructions (<500 lines)
 ├── references/           # Loaded on demand (frameworks, checklists, templates)
 └── evals/evals.json      # Quality evaluations
@@ -41,39 +45,42 @@ Read the `references/*.md` files only when the SKILL.md points to them — progr
 
 ## 4. Skills by Category
 
+Names below are the **upstream** names that `make install-skills` installs. Former local names (`page-cro`, `form-cro`, `paid-ads`, …) are recorded in `skills.json` as `former_local_name_map`. `form-cro` and `page-cro` both map to `cro`.
+
 | Category | Skills |
 |----------|--------|
-| **SEO & Content** | `seo-audit`, `ai-seo`, `site-architecture`, `programmatic-seo`, `schema-markup`, `content-strategy` |
-| **CRO** | `page-cro`, `signup-flow-cro`, `onboarding-cro`, `form-cro`, `popup-cro`, `paywall-upgrade-cro` |
-| **Content & Copy** | `copywriting`, `copy-editing`, `cold-email`, `email-sequence`, `social-content` |
-| **Paid & Measurement** | `paid-ads`, `ad-creative`, `ab-test-setup`, `analytics-tracking` |
-| **Growth & Retention** | `referral-program`, `free-tool-strategy`, `churn-prevention`, `community-marketing`, `lead-magnets` |
-| **Sales & GTM** | `revops`, `sales-enablement`, `launch-strategy`, `pricing-strategy`, `competitor-alternatives`, `aso-audit` |
-| **Strategy & Research** | `marketing-ideas`, `marketing-psychology`, `customer-research`, `product-marketing-context` |
+| **SEO & Content** | `seo-audit`, `ai-seo`, `site-architecture`, `programmatic-seo`, `schema`, `content-strategy` |
+| **CRO** | `cro`, `signup`, `onboarding`, `popups`, `paywalls` |
+| **Content & Copy** | `copywriting`, `copy-editing`, `cold-email`, `emails`, `social` |
+| **Paid & Measurement** | `ads`, `ad-creative`, `ab-testing`, `analytics` |
+| **Growth & Retention** | `referrals`, `free-tools`, `churn-prevention`, `community-marketing`, `lead-magnets` |
+| **Sales & GTM** | `revops`, `sales-enablement`, `launch`, `pricing`, `competitors`, `aso` |
+| **Strategy & Research** | `marketing-ideas`, `marketing-psychology`, `customer-research`, `product-marketing` |
 
 ## 5. Execution Loop
 
 For every marketing task:
 
-1. **Context check:** Load `product-marketing-context` (or the project context file).
-2. **Skill selection:** Match the request to one primary skill by scanning the `description` fields under `./.ai/skills/marketing/`.
+1. **Context check:** Load `product-marketing` (or the project context file).
+2. **Skill selection:** Match the request to one primary skill by scanning the `description` fields of the installed marketing skills.
 3. **Progressive disclosure:** Read the selected `SKILL.md`. Only fetch `references/*.md` when the SKILL.md links to them.
-4. **Cross-reference:** Check the `Related Skills` section at the bottom of each SKILL.md — marketing skills compose (e.g. `copywriting` ↔ `page-cro` ↔ `ab-test-setup`).
+4. **Cross-reference:** Check the `Related Skills` section at the bottom of each SKILL.md — marketing skills compose (e.g. `copywriting` ↔ `cro` ↔ `ab-testing`).
 5. **Deliver:** Produce the output format specified in the skill (page copy, ad variants, audit report, etc.).
 
 ## 6. Interaction with Engineering Skills
 
-Marketing skills coexist with engineering skills in the same `.ai/skills/` tree. When a marketing task requires code (landing page markup, tracking snippets, A/B test wiring), hand off to the relevant engineering skill:
+Marketing skills live in the global skills store. When a marketing task requires code (landing page markup, tracking snippets, A/B test wiring), hand off to the relevant **own** engineering skill (vendored via `make ai` or installed from this repo):
 
-- HTML/CSS/JS implementation → `./.ai/skills/typescript-standard/SKILL.md`
-- Backend/server code → `./.ai/skills/php-standard/SKILL.md` or `./.ai/skills/typescript-standard/SKILL.md`
-- Reviewing generated code → `./.ai/skills/code-review/SKILL.md`
+- HTML/CSS/JS implementation → `typescript-standard`
+- Backend/server code → `php-standard` or `typescript-standard`
+- Reviewing generated code → `code-review`
 
 ## 7. What This Protocol Does NOT Cover
 
-- Tool integrations (GA4, Stripe, Mailchimp CLIs) — not vendored in this repo.
-- Claude Code plugin marketplace installation — use the skills directly via vendoring (`make ai <path>`).
-- Version update checks against upstream — pull manually from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills).
+- Tool integrations (GA4, Stripe, Mailchimp CLIs) — not shipped by this repo.
+- Claude Code plugin marketplace installation — use `make install-skills`.
+- Manual vendoring of marketing skills into `.ai/` — they are declared in `skills.json`, not copied.
+- Version updates — `npx skills check` / `npx skills update` against the pin in `skills.json`.
 
 ---
-*Credits: Marketing skills adapted from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) by Corey Haines (MIT License).*
+*Credits: Marketing skills from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) by Corey Haines (MIT License).*

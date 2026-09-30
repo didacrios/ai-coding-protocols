@@ -8,7 +8,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `catalog/` — harness-agnostic YAML for eight development agents (`lead` plus developer, researcher, reviewer, specifier, designer, technical-writer, publisher), lite and full workflows, short slash aliases (`/lite`, `/full`, `/plan`, `/research`, `/review`, `/design`, `/implement`, `/docs`, `/publish`), and Pi/OpenCode v2 adapters. `make test-catalog` / `make render-catalog` preview into `generated/` and do not write live harness trees.
 - `skills/plan-initiative/SKILL.md` — Initiative framing protocol for Engineering Managers with strict-stop discovery, explicit scope boundaries, and a single initiative-brief output.
+- `blueprints/pi.md` — Pi catalog adapter: preview under `generated/pi/`; `subagents.json`, `models.json`, and `extensions/` stay machine-local.
+- `blueprints/opencode.md` — OpenCode catalog adapter plus local overlays in `harness/`. `package-lock.json` stays generated.
+- `harness/package-overlay.json` and `harness/tui-overlay.json` — local deltas for live `package.json` / `tui.json`. `scripts/apply-opencode-overlay.mjs` merges all three overlays; `--dest` previews without touching `~/.config/opencode`.
+- `NOTICE` and `licenses/opencode-agent-orchestration-kit.Apache-2.0.txt` — Apache-2.0 attribution for adapted agent contracts (see README Credits).
+
+### Changed
+
+- Community skills are declared in `skills.json` (consumer step: `make install-skills`), matching addyosmani and mattpocock. `muratcankoylan/Agent-Skills-for-Context-Engineering` (7 skills, pin `6dbe1a1`) and `coreyhaines31/marketingskills` (35 skills, pin `5b2c000`) are dependencies, not copies in `skills/`.
+- `template/SKILL.md` renamed to `template/SKILL.template.md` so the skills CLI does not treat the scaffold as an installable skill named `skill-name`.
+- Portable agents come only from `catalog/`. Attribution for adapted contracts is in README Credits and `NOTICE`.
+
+### Removed
+
+- Third-party kit installer, Pi converter script, and skill-skip based on a local kit copy.
+- OpenCode residue-purge Makefile target and script.
+- Vendored copies of seven context-engineering skills under `skills/` (`context-fundamentals`, `context-compression`, `context-optimization`, `filesystem-context`, `project-development`, `tool-design`, `evaluation`).
+- Vendored `skills/marketing/` tree (36 local directories). Upstream names differ; see `former_local_name_map` in `skills.json`.
 
 ## [1.0.0] — 2026-02-26
 

@@ -1,0 +1,28 @@
+id: lead
+description: "Orchestrator — routes work, delegates to agents, synthesizes results. Does not implement."
+role: read-only
+mode: all
+capabilities:
+  - read
+  - bash
+delegates:
+  - designer
+  - researcher
+  - specifier
+  - developer
+  - reviewer
+  - technical-writer
+  - publisher
+harness:
+  pi:
+    acceptanceRole: read-only
+  opencode:
+    shell_default: deny
+    shell_allow:
+      - "git status*"
+      - "git diff*"
+      - "git log*"
+      - "ls*"
+      - "find *"
+      - "grep *"
+      - "rg *"

@@ -1,0 +1,5 @@
+id: implement
+description: "Implement an approved task."
+agent: developer
+argument_hint: "<task>"
+invoke: "Implement this approved task:"

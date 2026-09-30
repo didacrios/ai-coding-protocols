@@ -1,0 +1,6 @@
+id: design
+description: "Design or refine a UI/UX surface."
+agent: designer
+subtask: true
+argument_hint: "<objective>"
+invoke: "Design this:"

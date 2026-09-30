@@ -1,0 +1,5 @@
+id: lite
+description: "Lite development — plan, then implement."
+workflow: lite-development
+agent: lead
+argument_hint: "<objective>"
