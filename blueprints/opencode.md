@@ -18,7 +18,7 @@ purge tooling and the skill manifest.
 | Third-party skills | `skills.json` dependencies | via `npx skills add <upstream>` (never committed) |
 | Agents (15) + commands (18) | OAK kit payload | `~/.config/opencode/{agents,commands}/` via `oak install` |
 | Kit docs + contracts | OAK kit payload | `~/.config/opencode/docs/ai/` via `oak install` |
-| Local overlay (mcp, provider, skills path, pinned plugins, permissions, fallback agents) | `harness/opencode-overlay.json` | merged into `~/.config/opencode/opencode.json` |
+| Local overlay | `harness/{opencode,package,tui}-overlay.json` | merged into `~/.config/opencode/{opencode.json,package.json,tui.json}` |
 | pi variant | `make install-pi` | `~/.pi/agent/{agents,prompts}/` (converted copies) |
 
 ## Setup on a new machine
@@ -48,36 +48,81 @@ cd ~/.config/opencode && npm install --ignore-scripts --legacy-peer-deps
 `@opentui/solid >= 0.4.5` while the kit pins `0.2.5` (the pairing that ships with
 the kit). Without the flag npm aborts on an unresolvable peer conflict.
 
-## Upgrading the kit
+## Ownership of kit-managed root files
 
-`oak upgrade` fails closed on any file the kit owns that was edited locally
-(`owned-modified`), and `oak doctor --accept-preserved` only applies to files the
-kit already tracks as *preserved* — not to owned files. Protected root files
-(`AGENTS.md`, `opencode.json`, `package.json`, `package-lock.json`, `tui.json`)
-become *preserved* only when they **pre-exist** a fresh `oak install`. So there are
-two ways to keep a local customisation:
+`oak doctor` on a machine that applied this overlay reports **pass=8,
+action-required=4**. The four drifted files are kit-**owned** (hash mismatch,
+mode `0o664` matches). None are *preserved*. `AGENTS.md` is the fifth
+protected root and currently matches the kit — leave it alone.
 
-1. **Overlay (recommended, used here).** Keep customisations in
-   `harness/opencode-overlay.json`, restore the kit's originals before upgrading,
-   then re-apply:
+`--accept-preserved` cannot adopt them: it only flips files the kit already
+tracks as preserved. On this install `preserved_files` is empty, so the
+flag refuses the four owned-modified files. That is expected, not a bug.
+
+| File | In this repo | Delta vs kit 1.1.1 | How to keep it across `oak upgrade` |
+|------|--------------|--------------------|--------------------------------------|
+| `opencode.json` | `harness/opencode-overlay.json` | Overlay keys: `mcp`, `provider.nan`, `skills.paths`, `plugin` (superpowers hash-pin + `openrtk@0.1.0`), `permission`, fallback agents `explore`/`general`. Kit keys (`model`, `default_agent`, `compaction`, …) stay in the file. | Restore kit original → upgrade → `make install-opencode-overlay`. |
+| `package.json` | `harness/package-overlay.json` | Kit pins `@opencode-ai/plugin` `1.14.41`. Overlay sets `^1.18.23` and adds `opencode-subagent-statusline` `^1.3.0`. `@opentui/*` stay on the kit pin. Dropped: `opencode-sdd-engram-manage` (gentle-ai). | Restore kit original → upgrade → `make install-opencode-overlay`. |
+| `package-lock.json` | **Not overlayed.** Generated. | Lock of the merged `package.json` after `npm install --ignore-scripts --legacy-peer-deps`. | Never vendor. Restore kit lock → upgrade → regenerate with the flag below. |
+| `tui.json` | `harness/tui-overlay.json` | Kit: `./plugins/token-tree-usage.tsx` only. Overlay keeps that path and adds `opencode-subagent-statusline`. The machine-local orca statusline plugin stays out of the repo. | Restore kit original → upgrade → `make install-opencode-overlay`. |
+| `AGENTS.md` | None | No drift. | Do not restore or overlay. |
+
+Preview without touching `~/.config/opencode`:
+
+```bash
+KIT="$(npm root -g)/opencode-agent-orchestration-kit/opencode"
+mkdir -p /tmp/oak-overlay-preview
+cp "$KIT"/{opencode.json,package.json,tui.json} /tmp/oak-overlay-preview/
+node scripts/apply-opencode-overlay.mjs --dest /tmp/oak-overlay-preview          # dry-run
+node scripts/apply-opencode-overlay.mjs --dest /tmp/oak-overlay-preview --apply  # write the preview dir only
+```
+
+### Why `oak doctor` stays amber
+
+| Finding | Cause | Decision |
+|---------|--------|----------|
+| `file-drift` (4 files) | Owned content differs from the kit payload. | Accept. The three overlays plus a regenerated lockfile are the source of truth. |
+| `dependencies` (2) | `@opencode-ai/plugin` `^1.18.x` vs kit `1.14.41`, plus `opencode-subagent-statusline`. Plugin 1.18 wants `@opentui/solid >= 0.4.5`; the kit pins `0.2.5`. | Accept. Install with `--legacy-peer-deps`. Do not bump `@opentui/*` off the kit pin. |
+| `optional-plugins` (2) | oak wants hash-pinned or local `./` refs. Failures: `openrtk@0.1.0` (semver) in `opencode.json` and bare `opencode-subagent-statusline` in `tui.json`. `superpowers@…#d884ae04` and `./plugins/token-tree-usage.tsx` already satisfy the rule. | Accept until those two refs are hash-pinned. |
+| `compatibility` | Umbrella of the findings above. | Follows the three decisions. |
+
+`oak doctor` is the health check. Green `pass` findings must stay green.
+Amber findings above are recorded, not something to "fix" with
+`--accept-preserved` or by copying this laptop's lockfile into git.
+
+### Two strategies (only one is in use)
+
+1. **Overlay + restore (this repo).** Before `oak upgrade`, copy the kit
+   originals over the four drifted files so oak sees no owned-modified
+   conflict, then put the local deltas back. `oak` compares **bytes and
+   mode** (`0o664`); a `cp` that leaves `0o644` still blocks the upgrade.
+
    ```bash
-   cp ~/.config/opencode/opencode.json /tmp/keep.json       # safety copy
-   cp <kit>/opencode/opencode.json ~/.config/opencode/       # restore the kit original
-   chmod 664 ~/.config/opencode/opencode.json                # oak compares bytes AND mode
+   KIT="$(npm root -g)/opencode-agent-orchestration-kit/opencode"
+   CFG="$HOME/.config/opencode"
+   for f in opencode.json package.json package-lock.json tui.json; do
+     cp "$CFG/$f" "/tmp/keep-$f"
+     cp "$KIT/$f" "$CFG/$f"
+     chmod 664 "$CFG/$f"
+   done
    oak upgrade
    make install-opencode-overlay
+   cd "$CFG" && npm install --ignore-scripts --legacy-peer-deps
    ```
-   `tui.json` and `package.json` are reconciled the same way; `package.json` keeps
-   `@opencode-ai/plugin ^1.18.x` and `opencode-subagent-statusline`, and drops
-   `opencode-sdd-engram-manage` (a gentle-ai dependency).
-2. **Preserved root files.** Install the kit into an empty config directory: the
-   five protected root files are then adopted as *preserved* and never block an
-   upgrade again, at the cost of not tracking kit changes to them.
 
-`oak doctor` is the source of truth for health: `pass` findings must stay green,
-`action-required` findings need a decision. Two findings are accepted on purpose
-here — `dependencies` (we pin a newer plugin than the kit's baseline) and
-`optional-plugins` (our own plugin references).
+2. **Preserved roots (not chosen).** `oak install` into an **empty**
+   config directory adopts the five protected roots as *preserved*.
+   Later upgrades skip them, so kit changes to those files are never
+   pulled. Do not mix this with the overlay dance on an existing tree.
+
+### What `make install-opencode-overlay` does
+
+`scripts/apply-opencode-overlay.mjs` merges the three fragments under
+`harness/` into `opencode.json`, `package.json`, and `tui.json` of the
+config dir (default `~/.config/opencode`, or `--dest DIR`). Dry-run is
+the script default; the Makefile target passes `--apply`. It does **not**
+write `package-lock.json` or `AGENTS.md`. After `--apply`, regenerate the
+lockfile in that config dir with `npm install --ignore-scripts --legacy-peer-deps`.
 
 ## Removing gentle-ai from an OpenCode tree
 

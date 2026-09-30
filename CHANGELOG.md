@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - `skills/plan-initiative/SKILL.md` — Initiative framing protocol for Engineering Managers with strict-stop discovery, explicit scope boundaries, and a single initiative-brief output.
+- `blueprints/opencode.md` — ownership of the four `oak doctor` file-drift paths. `harness/{opencode,package,tui}-overlay.json` reconstruct them; `package-lock.json` stays generated. `--accept-preserved` cannot adopt kit-owned files; `dependencies` and `optional-plugins` findings are accepted on purpose.
+- `harness/package-overlay.json` and `harness/tui-overlay.json` — local deltas for kit-owned `package.json` / `tui.json`. `scripts/apply-opencode-overlay.mjs` merges all three overlays; `--dest` previews without touching `~/.config/opencode`.
 
 ### Changed
 

@@ -47,6 +47,7 @@ ai-coding-protocols/
 Pre-assembled configurations for specific tools:
 - **`cursor-rules.md`** — Drop-in `.cursor/rules/` content for Cursor
 - **`claude-cli.md`** — Drop-in `CLAUDE.md` content for Claude Code
+- **`opencode.md`** — OpenCode setup (OAK kit + local overlay)
 - **`marketing.md`** — Drop-in protocol for marketing agents (product context, skill activation by description, category map)
 
 ## Installation
@@ -100,11 +101,12 @@ The OpenCode harness (15 agents, 18 commands, kit docs) is owned by the
 [OAK kit](https://github.com/jcarlosrodicio/opencode-agent-orchestration-kit),
 pinned to `1.1.1` and installed through its own lifecycle (`oak install` /
 `oak upgrade`). This repository keeps the local overlay
-(`harness/opencode-overlay.json`: MCP servers, provider, skills path, pinned
-plugins, permissions, fallback agents) plus the tooling around it:
+(`harness/opencode-overlay.json`, `harness/package-overlay.json`,
+`harness/tui-overlay.json`) plus the tooling around it:
 `make install-oak`, `make install-opencode-overlay`, `make install-pi` and
-`make purge-gentle-ai`. See [`blueprints/opencode.md`](blueprints/opencode.md)
-for the setup, the upgrade procedure and the gentle-ai purge.
+`make purge-gentle-ai`. The overlay covers `opencode.json`, `package.json`,
+and `tui.json`; the lockfile stays generated (see the ownership table in
+[`blueprints/opencode.md`](blueprints/opencode.md)).
 
 ### Claude Code
 

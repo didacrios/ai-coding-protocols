@@ -8,7 +8,7 @@ help:
 	@echo "  make ai <path>                  Vendor skills+blueprints+template to <path>/.ai/"
 	@echo "  make install-skills             Install third-party skills from skills.json (via npx skills add)"
 	@echo "  make install-oak                Install the OAK kit (OpenCode harness) globally, pinned to $(OAK_VERSION)"
-	@echo "  make install-opencode-overlay   Merge the local Overlay into ~/.config/opencode/opencode.json"
+	@echo "  make install-opencode-overlay   Merge harness/*-overlay.json into live opencode.json, package.json, tui.json (see blueprints/opencode.md)"
 	@echo "  make install-pi                 Convert + install the harness to ~/.pi/agent"
 	@echo "  make purge-gentle-ai            Dry-run: report gentle-ai residue in $(OPENCODE_DIR)"
 
