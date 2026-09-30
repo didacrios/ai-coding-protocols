@@ -59,7 +59,9 @@ function writePi(catalog, root) {
   }
   for (const command of catalog.commands.values()) {
     const workflow = command.workflow ? catalog.workflows.get(command.workflow) : undefined
-    files.push(write(join(root, "prompts", `${command.id}.md`), adaptPiCommand(command, workflow)))
+    files.push(
+      write(join(root, "prompts", `${command.id}.md`), adaptPiCommand(command, workflow, catalog)),
+    )
   }
   return files
 }
@@ -72,7 +74,10 @@ function writeOpencode(catalog, root) {
   for (const command of catalog.commands.values()) {
     const workflow = command.workflow ? catalog.workflows.get(command.workflow) : undefined
     files.push(
-      write(join(root, "commands", `${command.id}.md`), adaptOpencodeCommand(command, workflow)),
+      write(
+        join(root, "commands", `${command.id}.md`),
+        adaptOpencodeCommand(command, workflow, catalog),
+      ),
     )
   }
   return files

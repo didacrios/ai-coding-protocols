@@ -63,7 +63,7 @@ Each handoff is self-contained:
 - expected output
 - expected validation
 
-When delegating `reviewer`, also include `diff_base`: the commit SHA, or `HEAD` plus the explicit uncommitted paths that are the candidate. Review that pinned git diff, not a moving worktree.
+When delegating `reviewer`, also include `diff_base`: the commit SHA, or `HEAD` plus the explicit uncommitted paths that are the candidate. Review that pinned git diff, not a moving worktree. Include `focus` when the user named a lens (`quality`, `security`, `tests`, `api`); otherwise `focus: all`.
 
 Forward research packets and specs **verbatim**. Do not summarize away findings the next agent needs. Do not drag long history into a subagent when the last result, the decision, and the relevant paths are enough.
 

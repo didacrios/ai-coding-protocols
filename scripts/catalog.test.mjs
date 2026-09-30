@@ -243,6 +243,48 @@ test("review command pins the git diff candidate", () => {
   assert.match(command.invoke, /git diff/)
 })
 
+test("catalog loads four review lenses; reviewer stays the only final verdict", () => {
+  const catalog = loadCatalog(catalogDir)
+  assert.equal(catalog.lenses.final_verdict, "reviewer")
+  assert.deepEqual(
+    catalog.lenses.items.map((lens) => lens.id),
+    ["quality", "security", "tests", "api"],
+  )
+  assert.equal(catalog.agents.size, 8)
+})
+
+test("reviewer prompt requires optional focus lenses without a partial verdict", () => {
+  const prompt = loadCatalog(catalogDir).agents.get("reviewer").prompt
+  assert.match(prompt, /## Focus/)
+  assert.match(prompt, /quality/)
+  assert.match(prompt, /security/)
+  assert.match(prompt, /tests/)
+  assert.match(prompt, /api/)
+  assert.match(prompt, /Do not emit a partial verdict/)
+})
+
+test("review command argument hint names the four lenses", () => {
+  const hint = loadCatalog(catalogDir).commands.get("review").argument_hint
+  assert.match(hint, /quality/)
+  assert.match(hint, /security/)
+  assert.match(hint, /tests/)
+  assert.match(hint, /api/)
+})
+
+test("both adapters inject review lenses into the review command", () => {
+  const catalog = loadCatalog(catalogDir)
+  const command = catalog.commands.get("review")
+  const pi = adaptPiCommand(command, undefined, catalog)
+  const oc = adaptOpencodeCommand(command, undefined, catalog)
+  for (const rendered of [pi, oc]) {
+    assert.match(rendered, /quality/)
+    assert.match(rendered, /security/)
+    assert.match(rendered, /tests/)
+    assert.match(rendered, /api/)
+    assert.match(rendered, /final verdict/)
+  }
+})
+
 test("render-catalog writes separate pi and opencode trees without touching HOME", () => {
   const dest = mkdtempSync(join(tmpdir(), "catalog-render-"))
   try {

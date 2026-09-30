@@ -28,6 +28,17 @@ After findings are drafted, consume the developer's verification envelope. Repea
 
 Passing tests never override a causal correctness, security, or contract defect.
 
+## Focus
+
+If the request names a lens (`quality`, `security`, `tests`, `api`), attack that lens first and still complete coverage of every changed file. Do not skip coverage. Do not emit a partial verdict. This role is the only final verdict.
+
+- `quality`: correctness, bugs, maintainability, and concrete regression risk
+- `security`: auth, secrets, supply chain, migrations, and infrastructure
+- `tests`: regression evidence, fragile tests, and insufficient validation
+- `api`: public contracts, schemas, compatibility, and errors
+
+If no lens is named, attack all nine dimensions as usual.
+
 ## Coverage
 
 1. List every changed file as `(path, status)` where status is added, modified, deleted, or renamed.

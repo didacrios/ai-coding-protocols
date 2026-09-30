@@ -1,5 +1,5 @@
 import { dumpYaml, parseYaml } from "./yaml-lite.mjs"
-import { renderWorkflowPrompt, workflowAgents } from "./catalog.mjs"
+import { renderReviewLensBlock, renderWorkflowPrompt, workflowAgents } from "./catalog.mjs"
 
 export function adaptOpencodeAgent(spec, catalog) {
   const permissions = opencodePermissions(spec, catalog)
@@ -11,7 +11,7 @@ export function adaptOpencodeAgent(spec, catalog) {
   return `---\n${dumpYaml(frontmatter)}\n---\n\n${spec.prompt}`
 }
 
-export function adaptOpencodeCommand(command, workflow) {
+export function adaptOpencodeCommand(command, workflow, catalog) {
   const frontmatter = {
     description: command.description,
     agent: command.agent,
@@ -30,7 +30,8 @@ export function adaptOpencodeCommand(command, workflow) {
     ].join("\n")
     return `---\n${dumpYaml(frontmatter)}\n---\n\n${body}`
   }
-  const body = [command.invoke, "", "$ARGUMENTS", ""].join("\n")
+  const extra = command.id === "review" ? renderReviewLensBlock(catalog?.lenses) : ""
+  const body = [command.invoke, "", "$ARGUMENTS", "", extra].join("\n")
   return `---\n${dumpYaml(frontmatter)}\n---\n\n${body}`
 }
 

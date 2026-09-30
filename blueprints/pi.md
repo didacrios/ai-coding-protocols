@@ -38,7 +38,7 @@ conflicts.
 | Component | Source | Destination | Notes |
 |-----------|--------|-------------|-------|
 | Catalog agents | `catalog/agents/` via adapter | `generated/pi/agents/` (preview) | Copy to `~/.pi/agent/agents/` only after diff. |
-| Catalog prompts | `catalog/commands/` via adapter | `generated/pi/prompts/` (preview) | `/lite` `/full` plus per-agent aliases. |
+| Catalog prompts | `catalog/commands/` via adapter | `generated/pi/prompts/` (preview) | `/lite` `/full` plus per-agent aliases. `/review` includes optional focus lenses. |
 | Own skills | `skills/` | via `npx skills add` | Not copied by render. |
 | Third-party skills | `skills.json` | via `make install-skills` | Declared, never committed. |
 

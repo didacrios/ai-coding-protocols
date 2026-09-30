@@ -56,6 +56,7 @@ node scripts/apply-opencode-overlay.mjs --dest /tmp/oc-overlay-preview --apply
 
 - Live writes to `~/.config/opencode` from `make render-catalog`
 - Machine-local plugins such as an orca statusline
+- Orchestrated review prepare script and specialist agent files (later OpenCode-only extra; lenses already render into `/review`)
 
 ## Notes
 

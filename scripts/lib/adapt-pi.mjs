@@ -33,7 +33,7 @@ export function adaptPiAgent(spec) {
   return `${fm.join("\n")}\n${spec.prompt}`
 }
 
-export function adaptPiCommand(command, workflow) {
+export function adaptPiCommand(command, workflow, catalog) {
   const fm = [
     "---",
     `description: ${command.description}`,
@@ -54,7 +54,7 @@ export function adaptPiCommand(command, workflow) {
     )
     return fm.join("\n")
   }
-  fm.push(renderAgentCommandPrompt(command, "$@"))
+  fm.push(renderAgentCommandPrompt(command, "$@", catalog))
   return fm.join("\n")
 }
 

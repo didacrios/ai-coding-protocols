@@ -1,5 +1,5 @@
 id: review
 description: "Read-only review of a pinned git diff or artifact."
 agent: reviewer
-argument_hint: "<target>"
-invoke: "Review the pinned candidate. Primary evidence is git diff against diff_base:"
+argument_hint: "[quality|security|tests|api] <target>"
+invoke: "Review the pinned candidate. Optional first word is a focus lens (quality, security, tests, api); default all. Primary evidence is git diff against diff_base:"
