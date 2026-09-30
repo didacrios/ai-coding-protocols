@@ -56,6 +56,12 @@ Neither adapter pins a model. Live `~/.pi` and `~/.config/opencode` are never th
 
 Workflow ids stay descriptive. Slash names stay short.
 
+## Review surfaces
+
+`/review` and the `review` stage in `/full` use the catalog `reviewer`: coverage of every changed file, a pinned `diff_base`, nine attack dimensions, and a fact-check. Verdicts are `approved`, `approved with observations`, `requires changes`, or `blocked`. Only introduced or worsened issues block.
+
+`skills/code-review` is a separate GitHub-comment protocol (emoji prefixes). It is not the catalog agent verdict. Do not mix the two in one pass.
+
 ## Checklist
 
 - [ ] Catalog tests pass

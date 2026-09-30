@@ -216,6 +216,33 @@ test("reviewer prompt requires causality and a blocked verdict", () => {
   assert.match(prompt, /Performance/)
 })
 
+test("reviewer prompt requires coverage, pinned candidate, and fact-check", () => {
+  const prompt = loadCatalog(catalogDir).agents.get("reviewer").prompt
+  assert.match(prompt, /coverage: files_in_change=/)
+  assert.match(prompt, /diff_base/)
+  assert.match(prompt, /file:line/)
+  assert.match(prompt, /Assumptions/)
+  assert.match(prompt, /Authorization/)
+  assert.match(prompt, /Spec drift/)
+  assert.match(prompt, /The construct it names does not exist/)
+  assert.match(prompt, /A line of the diff literally contradicts it/)
+  assert.match(prompt, /developer summary/)
+})
+
+test("lead handoff pins diff_base and never substitutes for reviewer", () => {
+  const prompt = loadCatalog(catalogDir).agents.get("lead").prompt
+  assert.match(prompt, /diff_base/)
+  assert.match(prompt, /Do not review a diff you or `developer` produced/)
+})
+
+test("review command pins the git diff candidate", () => {
+  const catalog = loadCatalog(catalogDir)
+  const command = catalog.commands.get("review")
+  assert.match(command.invoke, /pinned/)
+  assert.match(command.invoke, /diff_base/)
+  assert.match(command.invoke, /git diff/)
+})
+
 test("render-catalog writes separate pi and opencode trees without touching HOME", () => {
   const dest = mkdtempSync(join(tmpdir(), "catalog-render-"))
   try {
