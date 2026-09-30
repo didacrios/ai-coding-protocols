@@ -19,7 +19,7 @@ purge tooling and the skill manifest.
 | Agents (15) + commands (18) | OAK kit payload | `~/.config/opencode/{agents,commands}/` via `oak install` |
 | Kit docs + contracts | OAK kit payload | `~/.config/opencode/docs/ai/` via `oak install` |
 | Local overlay | `harness/{opencode,package,tui}-overlay.json` | merged into `~/.config/opencode/{opencode.json,package.json,tui.json}` |
-| pi variant | `make install-pi` | `~/.pi/agent/{agents,prompts}/` (converted copies) |
+| pi variant | `make install-pi` | `~/.pi/agent/{agents,prompts}/` (converted copies; see [`pi.md`](pi.md)) |
 
 ## Setup on a new machine
 
@@ -142,16 +142,11 @@ review.
 
 ### pi specifics
 
-- `make install-pi` runs `scripts/sync-harness.mjs`, which reads the agents and
-  commands from the **installed kit** (`npm root -g`/opencode-agent-orchestration-kit/opencode,
-  or a live config tree, or `--source`), converts opencode frontmatter
-  (`permission` blocks) to pi agent format (`tools:` allowlist) and commands to pi
-  prompt templates. Copies, not symlinks — re-run after a kit upgrade.
-- pi model routing stays in `~/.pi/agent/subagents.json` (`model_profiles`);
-  no model pins are written by the converter.
-- The kit's `AGENTS.md` is not merged automatically; reconcile it by hand into
-  `~/.pi/agent/AGENTS.md`.
-- Skills: pi discovers `SKILL.md` files from `~/.pi/agent/skills/` (same spec).
+Full contract: [`pi.md`](pi.md). Summary: `make install-pi` converts kit
+agents/commands into `~/.pi/agent/{agents,prompts}/` and **skips** existing
+files that differ. It never writes `subagents.json`, `models.json`, or
+extensions. Preview with `--dest`; do not `--force` a live Pi tree unless
+replacing those agents is the goal.
 
 ## Not included (intentionally)
 

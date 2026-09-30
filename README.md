@@ -48,6 +48,7 @@ Pre-assembled configurations for specific tools:
 - **`cursor-rules.md`** — Drop-in `.cursor/rules/` content for Cursor
 - **`claude-cli.md`** — Drop-in `CLAUDE.md` content for Claude Code
 - **`opencode.md`** — OpenCode setup (OAK kit + local overlay)
+- **`pi.md`** — Pi setup: what `make install-pi` writes, what stays in `~/.pi/agent/`
 - **`marketing.md`** — Drop-in protocol for marketing agents (product context, skill activation by description, category map)
 
 ## Installation
@@ -106,7 +107,9 @@ pinned to `1.1.1` and installed through its own lifecycle (`oak install` /
 `make install-oak`, `make install-opencode-overlay`, `make install-pi` and
 `make purge-gentle-ai`. The overlay covers `opencode.json`, `package.json`,
 and `tui.json`; the lockfile stays generated (see the ownership table in
-[`blueprints/opencode.md`](blueprints/opencode.md)).
+[`blueprints/opencode.md`](blueprints/opencode.md)). Pi conversion:
+[`blueprints/pi.md`](blueprints/pi.md) (preview with `--dest`, never `--force`
+a live Pi tree by accident).
 
 ### Claude Code
 
