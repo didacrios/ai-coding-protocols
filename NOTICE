@@ -15,8 +15,9 @@ Licensed under the Apache License, Version 2.0.
 A copy of that license is in `licenses/opencode-agent-orchestration-kit.Apache-2.0.txt`.
 
 This catalog is a modified work: harness-agnostic YAML, Pi and OpenCode v2
-adapters, short slash aliases, and prompts that omit kit-specific installers,
-skill names, and tools.
+adapters, short slash aliases, prompts that omit kit-specific installers,
+skill names, and tools, and a compact OpenCode review-preflight script
+derived from that kit's prepare path.
 
 The following notices appear in that project's `NOTICE.md`:
 

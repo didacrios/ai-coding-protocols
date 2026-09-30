@@ -29,6 +29,7 @@ Skills are a separate consumer step (`make install-skills` +
 | Skills (own) | `skills/` | via `npx skills add didacrios/ai-coding-protocols` |
 | Third-party skills | `skills.json` | via `make install-skills` (never committed) |
 | Catalog agents + commands | `catalog/` via `make render-catalog` | preview in `generated/opencode/`; live copy is a separate decision |
+| OpenCode review extras | lenses + `scripts/review-preflight.mjs` via adapter | preview `generated/opencode/agents/review_*.md`, `review_coordinator.md`, `commands/review-{preflight,partial}.md`, `scripts/review-preflight.mjs` |
 | Local overlay | `harness/{opencode,package,tui}-overlay.json` | merged into `opencode.json`, `package.json`, `tui.json` of a chosen dest |
 | pi variant | catalog adapter | see [`pi.md`](pi.md) |
 
@@ -56,7 +57,7 @@ node scripts/apply-opencode-overlay.mjs --dest /tmp/oc-overlay-preview --apply
 
 - Live writes to `~/.config/opencode` from `make render-catalog`
 - Machine-local plugins such as an orca statusline
-- Orchestrated review prepare script and specialist agent files (later OpenCode-only extra; lenses already render into `/review`)
+- Catalog YAML roster entries for `review_coordinator` or `review_*` specialists. Those files are adapter extras only.
 
 ## Notes
 

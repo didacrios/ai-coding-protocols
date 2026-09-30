@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync } from "node:fs"
+import { mkdtempSync, readFileSync, rmSync, existsSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
 import { execFileSync } from "node:child_process"
@@ -6,13 +6,17 @@ import { fileURLToPath } from "node:url"
 import test from "node:test"
 import assert from "node:assert/strict"
 import { parseYaml, dumpYaml } from "./lib/yaml-lite.mjs"
-import { loadCatalog, renderWorkflowPrompt } from "./lib/catalog.mjs"
+import { loadCatalog, renderWorkflowPrompt, lensAgentIds } from "./lib/catalog.mjs"
 import { adaptPiAgent, adaptPiCommand, dumpPiFrontmatter } from "./lib/adapt-pi.mjs"
 import {
   adaptOpencodeAgent,
   adaptOpencodeCommand,
   parseOpencodeFrontmatter,
 } from "./lib/adapt-opencode.mjs"
+import {
+  adaptOpencodeLensSpecialist,
+  adaptOpencodeReviewCoordinator,
+} from "./lib/opencode-review-extras.mjs"
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..")
 const catalogDir = join(repoRoot, "catalog")
@@ -139,6 +143,28 @@ test("opencode lead allows workflow subagents and denies the rest", () => {
   for (const agent of ["specifier", "developer", "researcher", "publisher"]) {
     assert.equal(sub.find((p) => p.resource === agent).effect, "allow")
   }
+  assert.equal(sub.find((p) => p.resource === "review_quality"), undefined)
+  assert.equal(sub.find((p) => p.resource === "review_coordinator"), undefined)
+})
+
+test("opencode extras emit not_run specialists from lenses, not the YAML roster", () => {
+  const catalog = loadCatalog(catalogDir)
+  assert.equal(catalog.agents.size, 8)
+  assert.deepEqual(lensAgentIds(catalog), [
+    "review_quality",
+    "review_security",
+    "review_tests",
+    "review_api",
+  ])
+  const specialist = adaptOpencodeLensSpecialist(catalog.lenses.items[0], catalog)
+  assert.match(specialist, /verdict: not_run/)
+  assert.match(specialist, /integral_verdict: forbidden/)
+  const coordinator = parseOpencodeFrontmatter(adaptOpencodeReviewCoordinator(catalog))
+  assert.equal(coordinator.mode, "all")
+  assert.equal(
+    coordinator.permissions.find((p) => p.action === "edit").effect,
+    "deny",
+  )
 })
 
 test("opencode specifier edit is glob-limited to docs", () => {
@@ -298,6 +324,37 @@ test("render-catalog writes separate pi and opencode trees without touching HOME
       readFileSync(join(dest, "opencode", "agents", "developer.md"), "utf8"),
     )
     assert.ok(Array.isArray(oc.permissions))
+    assert.equal(existsSync(join(dest, "pi", "agents", "review_quality.md")), false)
+    assert.equal(existsSync(join(dest, "pi", "agents", "review_coordinator.md")), false)
+    const specialist = parseOpencodeFrontmatter(
+      readFileSync(join(dest, "opencode", "agents", "review_quality.md"), "utf8"),
+    )
+    assert.equal(specialist.permissions.find((p) => p.action === "edit").effect, "deny")
+    assert.equal(
+      specialist.permissions.find((p) => p.action === "subagent" && p.resource === "*").effect,
+      "deny",
+    )
+    const coordinator = parseOpencodeFrontmatter(
+      readFileSync(join(dest, "opencode", "agents", "review_coordinator.md"), "utf8"),
+    )
+    const sub = coordinator.permissions.filter((p) => p.action === "subagent")
+    assert.equal(sub.find((p) => p.resource === "*").effect, "deny")
+    for (const agent of ["review_quality", "review_security", "review_tests", "review_api"]) {
+      assert.equal(sub.find((p) => p.resource === agent).effect, "allow")
+    }
+    assert.match(
+      readFileSync(join(dest, "opencode", "agents", "review_quality.md"), "utf8"),
+      /verdict: not_run/,
+    )
+    assert.match(
+      readFileSync(join(dest, "opencode", "commands", "review-preflight.md"), "utf8"),
+      /^agent: review_coordinator$/m,
+    )
+    assert.match(
+      readFileSync(join(dest, "opencode", "commands", "review-partial.md"), "utf8"),
+      /verdict stays not_run|verdict: not_run/i,
+    )
+    assert.ok(existsSync(join(dest, "opencode", "scripts", "review-preflight.mjs")))
   } finally {
     rmSync(dest, { recursive: true, force: true })
   }

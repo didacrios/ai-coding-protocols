@@ -1,5 +1,10 @@
 import { dumpYaml, parseYaml } from "./yaml-lite.mjs"
-import { renderReviewLensBlock, renderWorkflowPrompt, workflowAgents } from "./catalog.mjs"
+import {
+  lensAgentIds,
+  renderReviewLensBlock,
+  renderWorkflowPrompt,
+  workflowAgents,
+} from "./catalog.mjs"
 
 export function adaptOpencodeAgent(spec, catalog) {
   const permissions = opencodePermissions(spec, catalog)
@@ -86,6 +91,15 @@ export function opencodePermissions(spec, catalog) {
     }
   }
 
+  if (spec.id === "review_coordinator" && catalog) {
+    rules.push({ action: "subagent", resource: "*", effect: "deny" })
+    for (const agent of lensAgentIds(catalog).sort()) {
+      rules.push({ action: "subagent", resource: agent, effect: "allow" })
+    }
+  } else if (spec.id.startsWith("review_")) {
+    rules.push({ action: "subagent", resource: "*", effect: "deny" })
+  }
+
   for (const extra of oc.permissions_extra ?? []) rules.push(extra)
   return rules
 }
@@ -107,7 +121,7 @@ function defaultShellAllow(spec) {
       "node --test*",
     ]
   }
-  if (spec.id === "reviewer") {
+  if (spec.id === "reviewer" || spec.id === "review_tests") {
     return [
       ...gitRead,
       "npm test*",

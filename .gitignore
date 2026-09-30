@@ -7,6 +7,9 @@ odd/
 # Adapter preview output (catalog YAML is the source of truth)
 generated/
 
+# Local OpenCode review preflight workspaces
+.review-preflight/
+
 # Local codegraph index
 .codegraph/
 

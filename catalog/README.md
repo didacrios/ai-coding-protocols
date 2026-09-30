@@ -26,7 +26,7 @@ Adapters turn these YAML files into Pi or OpenCode v2 Markdown. Edit the catalog
 | Target | Output | Frontmatter |
 |--------|--------|-------------|
 | Pi | `agents/*.md`, `prompts/*.md` | `name`, `tools`, `systemPromptMode`, `inheritProjectContext` |
-| OpenCode v2 | `agents/*.md`, `commands/*.md` | `mode`, `permissions` list (`action` / `resource` / `effect`) |
+| OpenCode v2 | `agents/*.md`, `commands/*.md`, plus extras `review_*`, `review_coordinator`, `commands/review-preflight.md`, `commands/review-partial.md`, `scripts/review-preflight.mjs` | `mode`, `permissions` list (`action` / `resource` / `effect`) |
 
 Neither adapter pins a model. Live `~/.pi` and `~/.config/opencode` are never the default destination.
 
@@ -57,11 +57,15 @@ Neither adapter pins a model. Live `~/.pi` and `~/.config/opencode` are never th
 
 `/review` accepts an optional first token `quality`, `security`, `tests`, or `api` (see `catalog/lenses.yaml`). Default is all nine dimensions. Coverage and one catalog verdict still apply.
 
+OpenCode preview also emits `/review-preflight` and `/review-partial` (not catalog YAML). Those bind to `review_coordinator` and keep `verdict: not_run`. Pi does not emit them.
+
 Workflow ids stay descriptive. Slash names stay short.
 
 ## Review surfaces
 
-`/review` and the `review` stage in `/full` use the catalog `reviewer`: coverage of every changed file, a pinned `diff_base`, nine attack dimensions, and a fact-check. Optional focus lenses (`quality`, `security`, `tests`, `api`) narrow the attack; they do not create specialist agents and they do not emit a partial verdict. Adapters inject the lens list into the rendered `/review` command. An OpenCode-only prepare script plus specialist files can be a later adapter extra; it is not in this catalog roster.
+`/review` and the `review` stage in `/full` use the catalog `reviewer`: coverage of every changed file, a pinned `diff_base`, nine attack dimensions, and a fact-check. Optional focus lenses (`quality`, `security`, `tests`, `api`) narrow the attack; they do not create catalog roster agents and they do not emit a partial verdict. Adapters inject the lens list into the rendered `/review` command.
+
+The OpenCode adapter extra generates `review_<lens>` specialists, `review_coordinator`, `/review-preflight`, `/review-partial`, and copies `scripts/review-preflight.mjs`. Those specialists must return `review_stage: partial` and `verdict: not_run`. They cannot approve. After a partial pass, `/review` is still the only final verdict. Pi stays `/review` plus optional focus.
 
 Verdicts are `approved`, `approved with observations`, `requires changes`, or `blocked`. Only introduced or worsened issues block.
 

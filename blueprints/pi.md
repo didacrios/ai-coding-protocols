@@ -69,6 +69,7 @@ every extra tool a live file already has (`web_search`, `mcp`, …).
 
 - Pi `subagents.json`, `models.json`, `extensions/`, `settings.json`, `AGENTS.md`
 - Skills materialisation (`make install-skills`) — consumer step, not repo prep
+- OpenCode review extras (`review_coordinator`, lens specialists, preflight script). Pi `/review` is catalog `reviewer` plus optional focus.
 
 ## Checklist
 

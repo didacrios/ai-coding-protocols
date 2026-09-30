@@ -49,6 +49,10 @@ _Avoid_: "looked minor", reviewing one file as covering its tests or counterpart
 An optional `/review` focus (`quality`, `security`, `tests`, `api`) declared in `catalog/lenses.yaml`. Adapters copy it into harness commands. It is not an agent and cannot emit a final verdict.
 _Avoid_: specialist reviewer, review_quality, coordinator as catalog roster roles
 
+**OpenCode review extra**:
+Adapter-only files under `generated/opencode/`: `review_coordinator`, `review_<lens>` specialists, `/review-preflight`, `/review-partial`, and `scripts/review-preflight.mjs`. Specialists must emit `verdict: not_run`. Only catalog `reviewer` may emit a final verdict.
+_Avoid_: adding those names to `catalog/agents`, treating preflight as approval
+
 **Harness**:
 A runtime that consumes adapter output (Pi, OpenCode v2).
 _Avoid_: model, provider

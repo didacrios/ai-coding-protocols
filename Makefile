@@ -26,7 +26,7 @@ install-opencode-overlay:
 	@node scripts/apply-opencode-overlay.mjs --apply
 
 test-catalog:
-	@node --test scripts/catalog.test.mjs
+	@node --test scripts/catalog.test.mjs scripts/review-preflight.test.mjs
 
 # Catalog YAML is the source of truth. This writes ./generated only.
 render-catalog:

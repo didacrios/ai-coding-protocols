@@ -149,6 +149,14 @@ function assertFields(spec, fields, file) {
   }
 }
 
+export function lensAgentId(lensId) {
+  return `review_${lensId}`
+}
+
+export function lensAgentIds(catalog) {
+  return (catalog.lenses?.items ?? []).map((lens) => lensAgentId(lens.id))
+}
+
 export function workflowAgents(catalog) {
   const names = new Set()
   for (const workflow of catalog.workflows.values()) {

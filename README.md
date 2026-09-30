@@ -103,8 +103,10 @@ This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/projec
 The portable development roster lives in [`catalog/`](catalog/README.md)
 (YAML source of truth). `make test-catalog` checks the specs;
 `make render-catalog` writes preview Markdown under `generated/` (gitignored,
-not a live install). Local OpenCode overlays live in `harness/` and apply with
-`make install-opencode-overlay`. Details:
+not a live install). OpenCode preview also includes review extras
+(`review_coordinator`, lens specialists, preflight script). Local OpenCode
+overlays live in `harness/` and apply with `make install-opencode-overlay`.
+Details:
 [`blueprints/opencode.md`](blueprints/opencode.md),
 [`blueprints/pi.md`](blueprints/pi.md).
 

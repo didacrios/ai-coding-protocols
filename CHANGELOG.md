@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `blueprints/opencode.md` — OpenCode catalog adapter plus local overlays in `harness/`. `package-lock.json` stays generated.
 - `harness/package-overlay.json` and `harness/tui-overlay.json` — local deltas for live `package.json` / `tui.json`. `scripts/apply-opencode-overlay.mjs` merges all three overlays; `--dest` previews without touching `~/.config/opencode`.
 - `NOTICE` and `licenses/opencode-agent-orchestration-kit.Apache-2.0.txt` — Apache-2.0 attribution for adapted agent contracts (see README Credits).
+- OpenCode adapter extra: `review_coordinator`, lens specialists `review_quality|security|tests|api`, `/review-preflight` and `/review-partial`, and `scripts/review-preflight.mjs`. Specialists emit `verdict: not_run`. Pi keeps `/review` plus focus only.
 
 ### Changed
 

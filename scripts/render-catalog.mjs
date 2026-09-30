@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url"
 import { loadCatalog } from "./lib/catalog.mjs"
 import { adaptPiAgent, adaptPiCommand } from "./lib/adapt-pi.mjs"
 import { adaptOpencodeAgent, adaptOpencodeCommand } from "./lib/adapt-opencode.mjs"
+import { writeOpencodeReviewExtras } from "./lib/opencode-review-extras.mjs"
 
 const args = process.argv.slice(2)
 const option = (name, fallback) => {
@@ -80,6 +81,7 @@ function writeOpencode(catalog, root) {
       ),
     )
   }
+  files.push(...writeOpencodeReviewExtras(catalog, write, root))
   return files
 }
 
