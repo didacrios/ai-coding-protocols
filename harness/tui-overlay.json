@@ -1,5 +1,5 @@
 {
-  "$comment": "Merged into the OAK kit tui.json after every kit upgrade. Arrays replace wholesale, so this list keeps the kit's token-tree-usage.tsx and adds the statusline package. The machine-local orca statusline plugin is still excluded.",
+  "$comment": "Merged into live tui.json. Arrays replace wholesale, so this list keeps token-tree-usage.tsx when present and adds the statusline package. The machine-local orca statusline plugin is still excluded.",
   "$schema": "https://opencode.ai/tui.json",
   "plugin": [
     "./plugins/token-tree-usage.tsx",

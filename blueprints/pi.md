@@ -7,39 +7,28 @@ mode: Setup
 # Pi Blueprint
 
 How this repository talks to a Pi install (`~/.pi/agent/`). It documents the
-conversion, the files this repo **never** writes, and the overwrite traps.
-It does **not** vendor Pi's live config.
+catalog adapter and the files this repo **never** writes. It does **not**
+vendor Pi's live config.
 
-The OpenCode harness (agents + commands) is owned by the
-[OAK kit](https://github.com/jcarlosrodicio/opencode-agent-orchestration-kit).
-`make install-pi` converts that kit payload into Pi's frontmatter dialect
-and copies the result next to whatever Pi already has.
+The portable development agents live in [`catalog/`](../catalog/README.md).
+`make render-catalog` writes Pi Markdown under `generated/pi/`. Copy those
+files into `~/.pi/agent/{agents,prompts}/` only after a preview. Same
+filenames as Pi's current agents (`developer`, `researcher`, …) are
+conflicts.
 
 ## Quick path
 
-1. Install the OAK kit first (`make install-oak`, then `oak install` in
-   `~/.config/opencode`). The converter reads the kit, not this repo's
-   `skills/` tree.
-2. **Preview, do not clobber.** Stage into a throwaway directory:
+1. Preview the catalog:
 
    ```bash
-   node scripts/sync-harness.mjs --target pi --dest /tmp/pi-harness-preview
+   make test-catalog
+   node scripts/render-catalog.mjs --target pi --dest /tmp/pi-catalog-preview
    ```
 
-3. Compare that preview with `~/.pi/agent/{agents,prompts}/`. Same filenames
-   as Pi's built-in agents (`developer`, `researcher`, `reviewer`, …) are
-   conflicts. Default behaviour: leave the live file untouched.
-4. Install for real only after that diff is acceptable:
+2. Compare that preview with `~/.pi/agent/{agents,prompts}/`. Do not copy
+   over live files until the diff is acceptable.
 
-   ```bash
-   make install-pi
-   # equivalent: node scripts/sync-harness.mjs --target pi
-   ```
-
-   Use `--prefix oak-` to install *alongside* existing names, or `--force`
-   only when you intend to replace Pi's copies.
-
-5. Skills are a separate consumer step (`make install-skills` +
+3. Skills are a separate consumer step (`make install-skills` +
    `npx skills add didacrios/ai-coding-protocols`). Pi discovers `SKILL.md`
    from its own skills path (`~/.pi/agent/skills/` and/or `~/.agents/skills/`).
    This blueprint does not install them.
@@ -48,84 +37,48 @@ and copies the result next to whatever Pi already has.
 
 | Component | Source | Destination | Notes |
 |-----------|--------|-------------|-------|
-| Converted agents | OAK kit `agents/*.md` | `~/.pi/agent/agents/` | Copies, not symlinks. Re-run after `oak upgrade`. |
-| Converted commands | OAK kit `commands/*.md` | `~/.pi/agent/prompts/` | Pi prompt templates. `agent` / `subtask` frontmatter is dropped. |
-| Own skills | `skills/` | via `npx skills add` | Not copied by `make install-pi`. |
+| Catalog agents | `catalog/agents/` via adapter | `generated/pi/agents/` (preview) | Copy to `~/.pi/agent/agents/` only after diff. |
+| Catalog prompts | `catalog/commands/` via adapter | `generated/pi/prompts/` (preview) | `/lite` `/full` plus per-agent aliases. |
+| Own skills | `skills/` | via `npx skills add` | Not copied by render. |
 | Third-party skills | `skills.json` | via `make install-skills` | Declared, never committed. |
-
-`scripts/sync-harness.mjs` resolves the kit in this order: `--source` /
-`OAK_SOURCE`, then the global npm package
-`opencode-agent-orchestration-kit/opencode`, then `~/.config/opencode`.
 
 ## What stays only on the machine
 
 These live under `~/.pi/agent/` with **no counterpart in this repository**.
-`make install-pi` does not generate, merge, or overwrite them.
+Rendering the catalog does not generate, merge, or overwrite them.
 
 | File | Role |
 |------|------|
-| `subagents.json` | `model_profiles` — Pi routes each agent name to a model. The converter writes **no** model pins. Kit names that Pi does not already list (`lead`, `scoper`, `debugger`, `evaluator`, `evolver`, and the `review_*` kit agents) fall back to the parent model until you add profiles. |
-| `models.json` | Provider registry (on this machine: `providers.nan`). |
-| `extensions/nan-provider.ts` | Registers the Nan provider with Pi's model registry (`NAN_BASE_URL` / `NAN_API_KEY`). Other extensions (`nan-web-search.ts`, Orca helpers, …) are likewise local. |
+| `subagents.json` | `model_profiles` — Pi routes each agent name to a model. The catalog writes **no** model pins. Names without a profile fall back to the parent model until you add one. |
+| `models.json` | Provider registry. |
+| `extensions/` | Local provider and tool extensions. |
 | `settings.json` | Default model, provider, theme, packages. |
-| `AGENTS.md` | Pi system prompt. The kit's `AGENTS.md` is **not** merged; reconcile by hand if you want kit contracts in Pi. |
+| `AGENTS.md` | Pi system prompt. Reconcile by hand if you want catalog contracts in the parent prompt. |
 | `auth.json` | Secrets. Never copy into the repo. |
 
 Keeping them out of the repo is deliberate: they are machine- and
-persona-specific (this laptop's Pi tree also holds gentle-pi / academic
-agents that this portable workflow excludes).
-
-## Frontmatter mapping (OpenCode → Pi)
-
-| OpenCode | Pi |
-|----------|-----|
-| filename (no `name:`) | `name:` from the filename |
-| `permission.read/glob/grep/list: allow` | `tools:` `read`, `find`, `grep`, `ls` |
-| `permission.edit: allow` | `tools:` `edit`, `write` |
-| `permission.bash` (including `"*": ask` plus allow-lists) | `tools:` `bash` |
-| — | `systemPromptMode: replace` (always) |
-
-The converter does **not** copy Pi-native fields that a live agent may already
-have: `inheritProjectContext`, `inheritSkills`, `acceptanceRole`, or extra
-tools (`web_search`, `fetch_content`, `nan_web_search`, `mcp`).
-
-That drop is why `--force` is dangerous. Example: a live `researcher.md` that
-declares `inheritProjectContext: true` and web tools becomes a kit-shaped
-file with `tools: read, find, grep, ls, bash` only. Web research then
-silently disappears.
+persona-specific.
 
 ## Safety
 
-| Flag | Effect |
-|------|--------|
-| *(default)* | Skip destination files that already exist **and** differ. Print the conflict list. |
-| `--dest <dir>` | Write somewhere else (preview / CI). Safe. |
-| `--prefix oak-` | `oak-developer.md` next to `developer.md`. Safe coexistence. |
-| `--force` | Overwrite conflicts. Use only when replacing Pi's agents is the goal. |
-
-`make install-pi` calls the script **without** `--force` and **without**
-`--dest`. On a Pi that already has `developer.md` / `researcher.md` /
-`reviewer.md` / `specifier.md` / `designer.md`, the first run typically
-installs only kit-only names (e.g. `lead`, `scoper`) and leaves the rest
-untouched.
+Catalog render never writes `$HOME` unless `--dest` points there. Diff
+before replacing a live agent: a generated `researcher.md` may not carry
+every extra tool a live file already has (`web_search`, `mcp`, …).
 
 ## Not included (intentionally)
 
 - Pi `subagents.json`, `models.json`, `extensions/`, `settings.json`, `AGENTS.md`
-- gentle-pi / SDD / judgment-day agents that this machine's Pi may already ship
 - Skills materialisation (`make install-skills`) — consumer step, not repo prep
-- Merging the kit `AGENTS.md` into Pi
 
 ## Checklist
 
-- [ ] Kit is installed and readable (`oak install` or `--source`)
 - [ ] Previewed with `--dest` and compared filenames against `~/.pi/agent/agents/`
-- [ ] Chose default (skip conflicts), `--prefix`, or an explicit `--force`
-- [ ] After install: added `model_profiles` for any new kit agent names you will invoke
-- [ ] After install: confirmed live agents that you skipped still have the tools they need
-- [ ] Reconciled `AGENTS.md` by hand if kit contracts should apply in Pi
+- [ ] Diffed extra tools and `inheritProjectContext` on agents you will replace
+- [ ] Added `model_profiles` for any new agent names you will invoke
+- [ ] Reconciled `AGENTS.md` by hand if catalog contracts should apply in Pi
 
 ## Next step
 
 OpenCode overlay, env template, and skill manifest: [`opencode.md`](opencode.md).
 Vendoring skills into a project: `make ai <path>`.
+Attribution: [`NOTICE`](../NOTICE).

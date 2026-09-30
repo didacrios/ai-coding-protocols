@@ -1,0 +1,5 @@
+id: review
+description: "Read-only review of the current diff or artifact."
+agent: reviewer
+argument_hint: "<target>"
+invoke: "Review this:"

@@ -1,0 +1,21 @@
+id: developer
+description: "Implementation agent — writes code, runs tests, validates changes."
+role: writer
+mode: subagent
+capabilities:
+  - read
+  - bash
+  - edit
+  - mcp
+harness:
+  pi:
+    extra_tools:
+      - mcp
+  opencode:
+    shell_deny:
+      - "git push*"
+      - "gh *"
+      - "git reset --hard*"
+      - "git add -A*"
+      - "git add --all*"
+      - "git add ."

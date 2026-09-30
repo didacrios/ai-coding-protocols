@@ -1,5 +1,5 @@
 {
-  "$comment": "Local overlay merged into the OAK kit opencode.json after every kit upgrade. Applied by scripts/apply-opencode-overlay.mjs. Owned by the user, not by the kit.",
+  "$comment": "Local overlay merged into live opencode.json. Applied by scripts/apply-opencode-overlay.mjs.",
   "mcp": {
     "codegraph": {
       "command": [

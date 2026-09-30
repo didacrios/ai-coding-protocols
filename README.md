@@ -10,15 +10,20 @@ A curated set of skills that transform AI coding agents into senior software eng
 
 The repository uses a skills-based architecture following the [SKILL.md specification](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering). Each skill is a self-contained file with standardized metadata, activation triggers, and integration references.
 
+Agents, workflows, and commands live in a harness-agnostic **catalog**. Adapters render Pi and OpenCode v2 Markdown from that YAML.
+
 ```
 ai-coding-protocols/
+├── catalog/                  # YAML + prompts: agents, workflows, commands
 ├── skills/                   # Own skill definitions only
 ├── skills.json               # Third-party skill manifest (declare, don't vendor)
-├── harness/                  # Local OpenCode overlay (harness itself: OAK kit)
+├── harness/                  # Local OpenCode overlay fragments
 ├── blueprints/               # Tool-specific integration configs
 ├── template/                 # Canonical SKILL.md template (not an installable skill)
-├── scripts/                  # Installers, harness conversion, gentle-ai purge
-└── Makefile                  # Install + vendor commands
+├── scripts/                  # Catalog adapters, skill installer, overlay
+├── NOTICE                    # Attribution for adapted agent contracts
+├── licenses/                 # Third-party license texts
+└── Makefile                  # Install + vendor + render-catalog
 ```
 
 ### Skills
@@ -47,8 +52,8 @@ ai-coding-protocols/
 Pre-assembled configurations for specific tools:
 - **`cursor-rules.md`** — Drop-in `.cursor/rules/` content for Cursor
 - **`claude-cli.md`** — Drop-in `CLAUDE.md` content for Claude Code
-- **`opencode.md`** — OpenCode setup (OAK kit + local overlay)
-- **`pi.md`** — Pi setup: what `make install-pi` writes, what stays in `~/.pi/agent/`
+- **`opencode.md`** — OpenCode setup (catalog adapter + local overlay)
+- **`pi.md`** — Pi setup (catalog adapter; live config stays on the machine)
 - **`marketing.md`** — Drop-in protocol for marketing agents (product context, skill activation by description, category map)
 
 ## Installation
@@ -84,11 +89,8 @@ This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/projec
   The engineering skills came from `addyosmani/agent-skills` (MIT, 25-skill
   catalog) — pinned to `0.6.11`. Earlier copies of these skills were vendored
   through `stanfish06/skillquarium` (an unlicensed curated mirror) and adapted
-  by the opencode harness; those adapted copies were removed in favor of the
-  canonical upstream. Twelve of them are also shipped (adapted) by the OAK kit,
-  which owns the OpenCode workflow; `scripts/install-skills.mjs` skips those when the
-  kit is present so one skill name never resolves to two different bodies
-  (`--include-kit-overlap` installs them on a machine without the kit).
+  by an OpenCode harness; those adapted copies were removed in favor of the
+  canonical upstream.
   Context-engineering skills come from
   `muratcankoylan/Agent-Skills-for-Context-Engineering` (MIT, pin
   `6dbe1a1`). Marketing skills come from `coreyhaines31/marketingskills`
@@ -98,18 +100,13 @@ This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/projec
 
 ### OpenCode / pi dev workflow
 
-The OpenCode harness (15 agents, 18 commands, kit docs) is owned by the
-[OAK kit](https://github.com/jcarlosrodicio/opencode-agent-orchestration-kit),
-pinned to `1.1.1` and installed through its own lifecycle (`oak install` /
-`oak upgrade`). This repository keeps the local overlay
-(`harness/opencode-overlay.json`, `harness/package-overlay.json`,
-`harness/tui-overlay.json`) plus the tooling around it:
-`make install-oak`, `make install-opencode-overlay`, `make install-pi` and
-`make purge-gentle-ai`. The overlay covers `opencode.json`, `package.json`,
-and `tui.json`; the lockfile stays generated (see the ownership table in
-[`blueprints/opencode.md`](blueprints/opencode.md)). Pi conversion:
-[`blueprints/pi.md`](blueprints/pi.md) (preview with `--dest`, never `--force`
-a live Pi tree by accident).
+The portable development roster lives in [`catalog/`](catalog/README.md)
+(YAML source of truth). `make test-catalog` checks the specs;
+`make render-catalog` writes preview Markdown under `generated/` (gitignored,
+not a live install). Local OpenCode overlays live in `harness/` and apply with
+`make install-opencode-overlay`. Details:
+[`blueprints/opencode.md`](blueprints/opencode.md),
+[`blueprints/pi.md`](blueprints/pi.md).
 
 ### Claude Code
 
@@ -152,6 +149,7 @@ Each SKILL.md includes: frontmatter metadata, activation triggers, detailed guid
 
 ## Credits
 
+- **Agent roster and operational contracts** adapted from [opencode-agent-orchestration-kit](https://github.com/jcarlosrodicio/opencode-agent-orchestration-kit) by jcarlosrodicio ([Apache License 2.0](licenses/opencode-agent-orchestration-kit.Apache-2.0.txt)). This catalog is a modified work; see [`NOTICE`](NOTICE).
 - **SKILL.md format** from [Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering) by Muratcan Koylan (MIT License). The seven context-engineering skills are declared in `skills.json`, not vendored.
 - **Marketing skills** from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) by Corey Haines (MIT License), declared in `skills.json`
 - **Recursive Language Modeling** inspired by MIT CSAIL research on [Recursive Language Models](https://arxiv.org/pdf/2512.24601)

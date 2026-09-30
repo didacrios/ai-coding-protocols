@@ -1,0 +1,5 @@
+id: full
+description: "Full development — research, spec, implement, review, docs, publish."
+workflow: full-development
+agent: lead
+argument_hint: "<objective>"

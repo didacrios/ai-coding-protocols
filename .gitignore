@@ -3,3 +3,10 @@
 
 # Local agent workflow state
 odd/
+
+# Adapter preview output (catalog YAML is the source of truth)
+generated/
+
+# Local codegraph index
+.codegraph/
+

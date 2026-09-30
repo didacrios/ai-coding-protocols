@@ -1,0 +1,13 @@
+id: researcher
+description: "Investigation agent — explores APIs, libraries, architecture, and risks. Does not implement."
+role: read-only
+mode: subagent
+capabilities:
+  - read
+  - bash
+  - web
+  - mcp
+harness:
+  pi:
+    extra_tools:
+      - mcp

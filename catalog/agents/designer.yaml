@@ -1,0 +1,15 @@
+id: designer
+description: "UX/UI agent — visual design, layout, and interaction patterns. UI surfaces only."
+role: writer
+mode: subagent
+capabilities:
+  - read
+  - bash
+  - edit
+  - web
+harness:
+  opencode:
+    edit_allow:
+      - "**/*.{css,scss,html,tsx,jsx,vue,svelte,twig,svg}"
+      - "**/assets/**"
+      - "**/*.md"

@@ -1,0 +1,10 @@
+id: lite-development
+description: "Fast path: lead delegates plan then implementation."
+entry: lead
+stages:
+  - id: plan
+    agent: specifier
+    required: true
+  - id: implement
+    agent: developer
+    required: true

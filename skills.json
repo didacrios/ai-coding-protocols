@@ -41,7 +41,7 @@
         "test-driven-development",
         "using-agent-skills"
       ],
-      "note": "MIT. Canonical origin of the engineering skills previously vendored via skillquarium (unlicensed mirror) and adapted by the opencode harness. Pinned to a tag for reproducibility; the skills CLI lockfile pins the resolved commit. Add more from the 25-skill catalog as needed: browser-testing-with-devtools (needs Chrome DevTools MCP), frontend-ui-engineering, git-workflow-and-versioning, observability-and-instrumentation, etc. Twelve of these are also shipped (adapted) by the OAK kit as its own skills; scripts/install-skills.mjs skips those when the kit is present so opencode never sees two skills with one name. Declared anyway: a harness without the kit needs them."
+      "note": "MIT. Canonical origin of the engineering skills previously vendored via skillquarium (unlicensed mirror) and adapted by an OpenCode harness. Pinned to a tag for reproducibility; the skills CLI lockfile pins the resolved commit. Add more from the 25-skill catalog as needed: browser-testing-with-devtools (needs Chrome DevTools MCP), frontend-ui-engineering, git-workflow-and-versioning, observability-and-instrumentation, etc."
     },
     {
       "source": "mattpocock/skills",

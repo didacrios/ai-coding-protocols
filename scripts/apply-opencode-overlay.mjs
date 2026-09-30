@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 /**
- * Merge local OpenCode overlays into a freshly upgraded OAK kit config.
+ * Merge local OpenCode overlays into a config tree.
  *
- * The kit rewrites protected root files on every `oak upgrade`. Local deltas
- * live in harness/*-overlay.json and are re-applied here. Keys in each
- * fragment win; everything else in the target is preserved. Arrays replace
- * wholesale so plugin lists never accumulate duplicates.
+ * Local deltas live in harness/*-overlay.json. Keys in each fragment win;
+ * everything else in the target is preserved. Arrays replace wholesale so
+ * plugin lists never accumulate duplicates.
  *
  * Usage:
  *   node scripts/apply-opencode-overlay.mjs [--dest DIR] [--apply]

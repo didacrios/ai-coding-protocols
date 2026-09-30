@@ -1,0 +1,6 @@
+id: docs
+description: "Write or update documentation."
+agent: technical-writer
+subtask: true
+argument_hint: "<objective>"
+invoke: "Document this:"

@@ -1,0 +1,15 @@
+id: specifier
+description: "Planner — creates specs, tasks, and acceptance criteria. Does not implement."
+role: writer
+mode: subagent
+capabilities:
+  - read
+  - bash
+  - edit
+  - web
+harness:
+  opencode:
+    edit_allow:
+      - "**/*.md"
+      - "**/*.mdx"
+      - "**/docs/**"

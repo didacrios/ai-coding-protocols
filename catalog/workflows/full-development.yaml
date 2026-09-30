@@ -1,0 +1,25 @@
+id: full-development
+description: "Full path: research, spec, implement, review, document, and publish."
+entry: lead
+stages:
+  - id: design
+    agent: designer
+    required: false
+  - id: research
+    agent: researcher
+    required: true
+  - id: specify
+    agent: specifier
+    required: true
+  - id: implement
+    agent: developer
+    required: true
+  - id: review
+    agent: reviewer
+    required: true
+  - id: document
+    agent: technical-writer
+    required: true
+  - id: publish
+    agent: publisher
+    required: true
