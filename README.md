@@ -15,14 +15,16 @@ Agents, workflows, and commands live in a harness-agnostic **catalog**. Adapters
 ```
 ai-coding-protocols/
 ├── catalog/                  # YAML + prompts: agents, workflows, commands
-├── skills/                   # Own skill definitions only
+├── skills/                   # Own skills, one dir per skill (see skills/README.md)
 ├── skills.json               # Third-party skill manifest (declare, don't vendor)
 ├── harness/                  # Local OpenCode overlay fragments
 ├── blueprints/               # Tool-specific integration configs
-├── template/                 # Canonical SKILL.md template (not an installable skill)
+├── template/                 # Canonical SKILL.md scaffold (not an installable skill)
 ├── scripts/                  # Catalog adapters, skill installer, overlay
+├── .agents/adr/              # Architecture decision records
 ├── NOTICE                    # Attribution for adapted agent contracts
 ├── licenses/                 # Third-party license texts
+├── LICENSE                   # MIT — covers this repository's own work
 └── Makefile                  # Install + vendor + render-catalog
 ```
 
@@ -58,13 +60,51 @@ Pre-assembled configurations for specific tools:
 
 ## Installation
 
-Vendor the skills into any project's `.ai/` directory:
+Two ways in. Use the skills CLI if you only want the **skills**; vendor with
+`make vendor` if you also want the **blueprints** that wire them into Cursor,
+Claude Code, OpenCode, or Pi — and the scaffold to grow your own.
+
+Both land in `.agents/skills/`, the canonical cross-client location the skills
+CLI itself uses (`.agents` is its hardcoded `AGENTS_DIR`, `skills` its
+`SKILLS_SUBDIR`). A vendored tree and a CLI-installed tree are therefore the
+same tree, and `npx skills check` / `update` work on either.
+
+### Skills CLI
 
 ```bash
-make ai /path/to/your/project
+npx skills add didacrios/ai-coding-protocols                              # all nine
+npx skills add didacrios/ai-coding-protocols --skill recursive-exploration # one
+npx skills add didacrios/ai-coding-protocols --list                        # browse first
 ```
 
-This copies `skills/`, `blueprints/`, and `template/` into `/path/to/your/project/.ai/`.
+Every `skills/<name>/` directory is self-contained: nothing in a skill points
+at this repository's blueprints, catalog, or `.agents/` layout, so a single-skill
+install leaves no dangling references. Cross-skill mentions are optional and
+linked by relative path, which still resolves after installation because the
+CLI keeps every installed skill in one root. The index is
+[`skills/README.md`](skills/README.md).
+
+Or, from a clone:
+
+```bash
+make install-own-skills        # npx skills add didacrios/ai-coding-protocols
+```
+
+### Vendored `.agents/` layout (skills + blueprints + template)
+
+Vendor into any project's `.agents/` directory:
+
+```bash
+make vendor /path/to/your/project     # alias: make ai
+```
+
+This copies `skills/`, `blueprints/`, and `template/` into
+`/path/to/your/project/.agents/`. It is a plain `cp`: no network, no CLI.
+
+The skills land in `.agents/skills/` — the same canonical path `npx skills add`
+writes to — so the two installs do not fight over two competing layouts. If a
+legacy `.ai/` directory is still present, `make vendor` warns so you can remove
+it after verifying the new tree.
 
 ### Skills manifest (skills.json)
 
@@ -115,8 +155,8 @@ Details:
 Add to your project's `CLAUDE.md`:
 
 ```
-Follow the engineering standards vendored in ./.ai/skills/.
-See ./.ai/blueprints/claude-cli.md for the full operational protocol.
+Follow the engineering standards vendored in ./.agents/skills/.
+See ./.agents/blueprints/claude-cli.md for the full operational protocol.
 ```
 
 ### Cursor
@@ -124,16 +164,16 @@ See ./.ai/blueprints/claude-cli.md for the full operational protocol.
 Create a rule file in `.cursor/rules/` (`.cursorrules` is deprecated) with the content of `blueprints/cursor-rules.md`, or reference it:
 
 ```
-Follow the engineering standards vendored in ./.ai/skills/.
-See ./.ai/blueprints/cursor-rules.md for the full operational protocol.
+Follow the engineering standards vendored in ./.agents/skills/.
+See ./.agents/blueprints/cursor-rules.md for the full operational protocol.
 ```
 
 ### Project Bootstrap (optional)
 
-After vendoring, ask your AI agent to run the bootstrap process. It will scan your project, detect the stack and conventions, and generate an initial project-specific skill in `.ai/skills/project/`:
+After vendoring, ask your AI agent to run the bootstrap process. It will scan your project, detect the stack and conventions, and generate an initial project-specific skill in `.agents/skills/project/`:
 
 ```
-Bootstrap this project using .ai/skills/project-bootstrap/SKILL.md
+Bootstrap this project using .agents/skills/project-bootstrap/SKILL.md
 ```
 
 As the project evolves, the `skill-generator` skill guides the agent to create additional project-specific skills automatically.
@@ -151,6 +191,7 @@ Each SKILL.md includes: frontmatter metadata, activation triggers, detailed guid
 
 ## Credits
 
+- **Own skills, catalog, and adapters** — MIT License ([`LICENSE`](LICENSE)).
 - **Agent roster and operational contracts** adapted from [opencode-agent-orchestration-kit](https://github.com/jcarlosrodicio/opencode-agent-orchestration-kit) by jcarlosrodicio ([Apache License 2.0](licenses/opencode-agent-orchestration-kit.Apache-2.0.txt)). This catalog is a modified work; see [`NOTICE`](NOTICE).
 - **SKILL.md format** from [Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering) by Muratcan Koylan (MIT License). The seven context-engineering skills are declared in `skills.json`, not vendored.
 - **Marketing skills** from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) by Corey Haines (MIT License), declared in `skills.json`

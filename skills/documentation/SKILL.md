@@ -1,8 +1,10 @@
 ---
 name: documentation
-version: 1.0.0
-description: Activate when generating in-code comments or system documentation using the Diátaxis framework.
-triggers: [docs, documentation, comments, tsdoc, phpdoc, diataxis, readme]
+description: Write in-code comments and system documentation that explain why rather than what, using the Diátaxis framework for external docs. Use when adding TSDoc or PHPDoc, creating a README, tutorial, how-to guide, explanation, or reference page, or documenting an API or schema.
+license: MIT
+metadata:
+  author: didacrios
+  version: 1.1.0
 ---
 
 # High-Precision Documentation Protocol
@@ -78,11 +80,10 @@ const result = await gateway.charge(amount);
 6. Read the implementation before writing about it
 7. Check for existing docs before creating new ones
 
-## Integration
-- Related: `typescript-standard` (TSDoc conventions), `php-standard` (PHPDoc conventions), `recursive-exploration` (source tracing)
+## Related skills
 
-## Skill Metadata
-- Created: 2025-06-01
-- Last Updated: 2025-07-01
-- Author: didacrios
-- Version: 1.0.0
+Optional companions, each installed separately.
+
+- [`typescript-standard`](../typescript-standard/SKILL.md) — TSDoc conventions.
+- [`php-standard`](../php-standard/SKILL.md) — PHPDoc conventions.
+- [`recursive-exploration`](../recursive-exploration/SKILL.md) — read the implementation before writing about it.

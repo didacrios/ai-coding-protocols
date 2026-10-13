@@ -32,7 +32,7 @@ Activation is discovery-driven: the agent matches the user's request against the
 
 ## 3. Skill Layout
 
-Installed globally (not copied into `.ai/`):
+Installed globally (not copied into `.agents/`):
 
 ```
 ~/.agents/skills/<upstream-name>/
@@ -79,7 +79,7 @@ Marketing skills live in the global skills store. When a marketing task requires
 
 - Tool integrations (GA4, Stripe, Mailchimp CLIs) — not shipped by this repo.
 - Claude Code plugin marketplace installation — use `make install-skills`.
-- Manual vendoring of marketing skills into `.ai/` — they are declared in `skills.json`, not copied.
+- Manual vendoring of marketing skills into `.agents/` — they are declared in `skills.json`, not copied.
 - Version updates — `npx skills check` / `npx skills update` against the pin in `skills.json`.
 
 ---

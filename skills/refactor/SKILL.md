@@ -1,8 +1,10 @@
 ---
 name: refactor
-version: 1.0.0
-description: Activate when improving code quality, reducing complexity, or aligning code with standards without changing behavior.
-triggers: [refactor, cleanup, simplify, extract, rename, complexity]
+description: Refactor code surgically without changing behavior — trace consumers first, require a green test suite, then transform one method per step with tests after each. Use when cleaning up after a feature, reducing method length or complexity, extracting helpers, aligning code with a stack standard, or renaming symbols to domain language.
+license: MIT
+metadata:
+  author: didacrios
+  version: 1.1.0
 ---
 
 # Surgical Refactoring Protocol
@@ -38,7 +40,7 @@ Systematically apply these transformations:
 - **Type Strengthening:** Replace `mixed`, `any`, or loose types with strict types or Value Objects.
 
 ### Execution Protocol
-1. **The "Shadow" Step:** Propose the new architecture in a `<thought>` block. Explain how it aligns with the `recursive-exploration` skill.
+1. **The "Shadow" Step:** Propose the new architecture in a `<thought>` block. Explain how it aligns with the tracing rules in [`recursive-exploration`](../recursive-exploration/SKILL.md).
 2. **Incremental Apply:** Refactor only ONE method at a time.
 3. **Verify:** Run tests after every single extraction to ensure the behavioral contract is intact.
 
@@ -66,12 +68,10 @@ For each refactor step:
 6. Replace loose types with strict types or Value Objects
 7. Document rationale for every change
 
-## Integration
-- Depends on: `recursive-exploration` (tracing methodology), `typescript-standard` or `php-standard` (target standards)
-- Related: `code-review` (refactor suggestions from reviews)
+## Related skills
 
-## Skill Metadata
-- Created: 2025-06-01
-- Last Updated: 2025-07-01
-- Author: didacrios
-- Version: 1.0.0
+Optional companions, each installed separately. If one is not present, apply its rules manually.
+
+- [`recursive-exploration`](../recursive-exploration/SKILL.md) — required before changing a method signature.
+- [`typescript-standard`](../typescript-standard/SKILL.md) and [`php-standard`](../php-standard/SKILL.md) — the target standards for the stack.
+- [`code-review`](../code-review/SKILL.md) — where refactor suggestions usually originate.

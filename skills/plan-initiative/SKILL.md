@@ -1,8 +1,10 @@
 ---
 name: plan-initiative
-version: 1.0.0
-description: Activate when an Engineering Manager needs to shape a rough initiative into a clear, scoped, outcome-oriented brief before execution.
-triggers: [plan-initiative, initiative, kickoff, scope, framing, epics, discovery, roadmap]
+description: Shape a rough engineering initiative into one scoped, outcome-oriented brief through strict-stop discovery, explicit in-scope and out-of-scope boundaries, and named risks and assumptions. Use when an Engineering Manager asks to plan, frame, or structure an initiative, when scope or ownership is still fuzzy, or when the team is jumping to solutions before the problem is validated.
+license: MIT
+metadata:
+  author: didacrios
+  version: 1.1.0
 ---
 
 # Plan Initiative
@@ -177,17 +179,14 @@ Do not finalize without confirmation.
 7. Always close with a 3-way confirmation gate: use as-is, edit, or cancel
 8. Favor concrete language over abstractions and generic phrasing
 
-## Integration
+## Related skills
 
-- Builds on: `recursive-exploration` (iterative discovery and confidence gating)
-- Related: `documentation` (clear structure and precision in written artifacts)
-- Complementary external framing references:
-  - Atlassian Project Poster: [https://www.atlassian.com/team-playbook/plays/project-poster](https://www.atlassian.com/team-playbook/plays/project-poster)
-  - Working Backwards PR/FAQ mindset: [https://workingbackwards.com/concepts/working-backwards-pr-faq-process/](https://workingbackwards.com/concepts/working-backwards-pr-faq-process/)
+Optional companions, each installed separately.
 
-## Skill Metadata
+- [`recursive-exploration`](../recursive-exploration/SKILL.md) — the iterative discovery and confidence-gating model this skill builds on.
+- [`documentation`](../documentation/SKILL.md) — structure and precision in written artifacts.
 
-- Created: 2026-04-09
-- Last Updated: 2026-04-09
-- Author: didacrios
-- Version: 1.0.0
+## References
+
+- [Atlassian Project Poster](https://www.atlassian.com/team-playbook/plays/project-poster)
+- [Working Backwards PR/FAQ](https://workingbackwards.com/concepts/working-backwards-pr-faq-process/)

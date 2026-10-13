@@ -1,8 +1,10 @@
 ---
 name: typescript-standard
-version: 1.0.0
-description: Activate when writing, reviewing, or testing TypeScript code to enforce clean code and TDD standards.
-triggers: [typescript, ts, jest, playwright, testing, react, tdd]
+description: Apply opinionated TypeScript and testing standards — strict mode with no `any`, 10-20 line methods, and a test-first loop using data builders, Faker, and Given-When-Then. Use when writing, reviewing, or testing TypeScript, setting up Jest or Playwright, or checking TS code against a project's conventions.
+license: MIT
+metadata:
+  author: didacrios
+  version: 1.1.0
 ---
 
 # TypeScript & Testing Standards
@@ -67,11 +69,10 @@ describe('CreateUser', () => {
 6. Tests live next to production code as `*.spec.ts`
 7. Minimum 80% test coverage
 
-## Integration
-- Related: `recursive-exploration` (reasoning model), `refactor` (cleanup workflow), `code-review` (review checklist)
+## Related skills
 
-## Skill Metadata
-- Created: 2025-06-01
-- Last Updated: 2025-07-01
-- Author: didacrios
-- Version: 1.0.0
+Optional companions, each installed separately.
+
+- [`recursive-exploration`](../recursive-exploration/SKILL.md) — the tracing model behind this skill.
+- [`refactor`](../refactor/SKILL.md) — the cleanup workflow that enforces the method-size rule.
+- [`code-review`](../code-review/SKILL.md) — the review checklist for TS diffs.

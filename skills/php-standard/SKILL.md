@@ -1,8 +1,10 @@
 ---
 name: php-standard
-version: 1.0.0
-description: Activate when writing, reviewing, or testing PHP code to enforce clean code, strict typing, and PHPUnit standards.
-triggers: [php, phpunit, laravel, symfony, psr, composer]
+description: Apply opinionated PHP 8.2+ and PHPUnit standards — `declare(strict_types=1)` everywhere, PSR-12 and PSR-4, value objects, and a test-first loop with Given-When-Then naming. Use when writing, reviewing, or testing PHP, wiring Composer autoloading, or setting up PHPUnit.
+license: MIT
+metadata:
+  author: didacrios
+  version: 1.1.0
 ---
 
 # PHP & Testing Standards
@@ -74,11 +76,10 @@ public function testCreateUser_WithValidData_ReturnsUser(): void
 8. Object Mother pattern for complex test entities
 9. `@dataProvider` for multi-case tests
 
-## Integration
-- Related: `recursive-exploration` (reasoning model), `refactor` (cleanup workflow), `code-review` (review checklist)
+## Related skills
 
-## Skill Metadata
-- Created: 2025-06-01
-- Last Updated: 2025-07-01
-- Author: didacrios
-- Version: 1.0.0
+Optional companions, each installed separately.
+
+- [`recursive-exploration`](../recursive-exploration/SKILL.md) — the tracing model behind this skill.
+- [`refactor`](../refactor/SKILL.md) — the cleanup workflow that enforces the method-size rule.
+- [`code-review`](../code-review/SKILL.md) — the review checklist for PHP diffs.

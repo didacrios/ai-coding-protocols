@@ -1,38 +1,49 @@
 ---
 name: skill-name
-version: 1.0.0
-description: One-line activation trigger — when should an AI agent load this skill?
-triggers: [keyword1, keyword2, keyword3]
+description: What this skill does and, crucially, when an agent should reach for it. Use when <trigger 1>, <trigger 2>, or <trigger 3>. Don't use it for <adjacent thing this skill does not cover>.
+license: MIT
+metadata:
+  author: your-name
+  version: 1.0.0
 ---
 
 # Skill Name
 
-<!-- One paragraph describing what this skill does and when it applies. -->
+<!-- One paragraph: what this skill does and the stance it takes. -->
 
-## When to Activate
-<!-- Bullet list of contexts where this skill should be loaded. -->
+## When to activate
+
+<!-- Bullets: the concrete situations that should load this skill. -->
+
 -
 
-## Core Concepts
-<!-- 3-5 key mental models, kept concise. -->
+## Core concepts
+
+<!-- 3-5 mental models, each one line. -->
+
 -
 
-## Detailed Guidance
-<!-- The main content. Organize with subsections as needed. -->
+## Process
+
+<!-- Numbered steps. End each with a "Done when:" line so completion is checkable. -->
+
+1. **Step name.** What to do.
+   *Done when:* the observable condition that means this step is finished.
+2. **Step name.** What to do.
+   *Done when:* …
 
 ## Examples
+
 <!-- Input/output pairs, code samples, or before/after comparisons. -->
 
 ## Guidelines
-<!-- Numbered, verifiable rules that an AI agent can check against. -->
+
+<!-- Numbered, verifiable rules an agent can check itself against. -->
+
 1.
 
-## Integration
-<!-- References to related skills (by name) and how they interact. -->
--
+## Related skills
 
-## Skill Metadata
-- Created: YYYY-MM-DD
-- Last Updated: YYYY-MM-DD
-- Author:
-- Version: 1.0.0
+Optional companions, each installed separately. If one is not present, apply its rules manually.
+
+- [`other-skill`](../other-skill/SKILL.md) — how it relates.

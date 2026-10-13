@@ -1,8 +1,10 @@
 ---
 name: code-review
-version: 1.0.0
-description: Activate when reviewing branches, commits, or pull requests using the emoji-driven review protocol.
-triggers: [review, pr, pull-request, code-review, merge, diff]
+description: Review a branch, commit, or pull request with emoji-tagged findings that separate blocking bugs from advisory notes, each blocking comment carrying a concrete fix. Use when reviewing a diff, auditing a PR, or giving structured feedback on code changes. Don't use it to review your own work in the session that produced it.
+license: MIT
+metadata:
+  author: didacrios
+  version: 1.1.0
 ---
 
 # Emoji-Driven Code Review Protocol
@@ -116,16 +118,17 @@ Cross-reference every diff against these checks:
 6. Review the code, not the author — use impersonal language
 7. Keep comments to 1-3 sentences plus code suggestion
 
-## Integration
-- Depends on: `recursive-exploration` (tracing methodology), `typescript-standard` or `php-standard` (quality gates)
-- Related: `refactor` (for implementing suggested refactors)
-- Related: catalog `reviewer` (`catalog/agents/reviewer.md`) is the agent verdict for `/review` and `/full`. This skill is GitHub-comment tone only. Do not mix emoji tags with catalog verdicts in one pass.
+## Related skills
 
----
-*References: [Emoji Code (dev.to)](https://dev.to/juanvegadev/start-doing-better-code-reviews-tomorrow-the-emoji-code-3jf6), [Code Review Emoji Guide (GitHub)](https://github.com/erikthedeveloper/code-review-emoji-guide)*
+Optional companions, each installed separately.
 
-## Skill Metadata
-- Created: 2025-06-01
-- Last Updated: 2025-07-01
-- Author: didacrios
-- Version: 1.0.0
+- [`recursive-exploration`](../recursive-exploration/SKILL.md) — the tracing model behind pre-review analysis.
+- [`typescript-standard`](../typescript-standard/SKILL.md) and [`php-standard`](../php-standard/SKILL.md) — the quality gates for the stack under review.
+- [`refactor`](../refactor/SKILL.md) — for implementing the refactors this review suggests.
+
+If your harness also runs a separate reviewer agent that emits a merge verdict, keep the two passes apart: this skill produces comment-level findings, that pass produces the verdict. Do not mix emoji tags with verdict language in one report.
+
+## References
+
+- [Emoji Code (dev.to)](https://dev.to/juanvegadev/start-doing-better-code-reviews-tomorrow-the-emoji-code-3jf6)
+- [Code Review Emoji Guide (GitHub)](https://github.com/erikthedeveloper/code-review-emoji-guide)

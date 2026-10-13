@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `LICENSE` (MIT) — the repository had no license, which blocked community use. Covers the own skills, catalog, and adapters; third-party material keeps its own terms (`NOTICE`, `licenses/`).
+- `skills/README.md` — index of the nine own skills, with the skills-CLI install commands and the model-invoked invocation model.
+- `.agents/adr/` — architecture decision records. `0001-skills-are-self-contained` and `0002-flat-skills-layout` record the decisions behind this pass.
+- `make install-own-skills` — installs this repository's own skills via `npx skills add $(OWN_REPO)` (override with `OWN_REPO=...`).
 - `catalog/` — harness-agnostic YAML for eight development agents (`lead` plus developer, researcher, reviewer, specifier, designer, technical-writer, publisher), lite and full workflows, short slash aliases (`/lite`, `/full`, `/plan`, `/research`, `/review`, `/design`, `/implement`, `/docs`, `/publish`), and Pi/OpenCode v2 adapters. `make test-catalog` / `make render-catalog` preview into `generated/` and do not write live harness trees.
 - `skills/plan-initiative/SKILL.md` — Initiative framing protocol for Engineering Managers with strict-stop discovery, explicit scope boundaries, and a single initiative-brief output.
 - `blueprints/pi.md` — Pi catalog adapter: preview under `generated/pi/`; `subagents.json`, `models.json`, and `extensions/` stay machine-local.
@@ -18,6 +22,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- **Vendored root renamed `.ai/` → `.agents/`.** `make ai` became `make vendor` (alias `make ai` kept) and now writes `<path>/.agents/{skills,blueprints,template}`. The repository previously shipped two competing layouts for one concept: `make ai` wrote `.ai/skills/` while `npx skills add` wrote `.agents/skills/`, and `blueprints/marketing.md` already documented the latter. `.agents/skills/` is the canonical cross-client location the skills CLI itself uses, so a vendored tree and a CLI-installed tree are now the same tree and `npx skills check` / `update` work on either. `make vendor` warns when a legacy `.ai/` is present but never deletes it — remove yours by hand after verifying. See `.agents/adr/0003-vendored-root-is-dot-agents.md`.
+- **Own skills are now self-contained and installable one at a time.** Every `skills/*/SKILL.md` dropped its repository-internal references (`.ai/` paths, `blueprints/`, `catalog/`), replaced the `Integration` section with optional `Related skills` relative links, and moved metadata out of a duplicated bottom `## Skill Metadata` block into frontmatter.
+- **Skill frontmatter rewritten to the Agent Skills shape.** `name`, a rich model-facing `description` (what it does, when to use it, and the adjacent case it is not for), `license: MIT`, and `metadata: {author, version}`. The non-standard `triggers:` array and top-level `version:` are gone; the `description` is the trigger. All nine skills bump to `1.1.0`.
+- `skills/skill-generator` and `skills/project-bootstrap` no longer hardcode a vendored path. They define a **skills root** (`.agents/skills/`, project or user scope — the same path the CLI and vendoring both use) and keep project skills under `project/`. `project-bootstrap` inlines the skill structure it previously pointed at in the template file.
+- `template/SKILL.template.md` — updated to the new frontmatter, a `Process` section with `Done when:` completion criteria, and a `Related skills` section.
+- `CONTEXT.md` — adds **Own skill**, **Blueprint**, and **Template** to the domain language.
+- `README.md` — the install section now leads with the skills CLI and separates it from the vendored `.agents/` blueprint path.
 - Catalog `reviewer` now requires file coverage, a pinned `diff_base`, nine attack dimensions, and a fact-check. `/review` and `lead` handoffs pin the git diff; `lead` must not review a diff it or `developer` produced. `skills/code-review` stays a separate emoji comment protocol.
 - `catalog/lenses.yaml` plus `/review` optional focus (`quality`, `security`, `tests`, `api`). Pi and OpenCode adapters inject the lens list into the review command; the roster stays eight agents.
 - Community skills are declared in `skills.json` (consumer step: `make install-skills`), matching addyosmani and mattpocock. `muratcankoylan/Agent-Skills-for-Context-Engineering` (7 skills, pin `6dbe1a1`) and `coreyhaines31/marketingskills` (35 skills, pin `5b2c000`) are dependencies, not copies in `skills/`.
