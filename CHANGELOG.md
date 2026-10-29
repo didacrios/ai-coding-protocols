@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `skills/plan-diagram/SKILL.md` — plan, spec, and issue diagrams: one coarse
+  C4-shaped `flowchart` per artifact, nodes limited to real repository paths,
+  symbols and policies, `subgraph` for every boundary, and a fixed shape lexicon
+  (file, class/contract, method, policy, store, external) with verb-labelled
+  edges. Level 2 for cross-container changes, level 3 for work inside one.
+  Assets: `assets/skeletons.md` with copy-paste L2, L3 and ASCII skeletons. The
+  Mermaid C4 extensions are rejected on purpose — GitHub's bundled renderer has
+  no C4 support and prints those blocks as raw text.
+
 ## [2.0.0] — 2026-10-29
 
 ### Added

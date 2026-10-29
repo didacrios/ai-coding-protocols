@@ -1,6 +1,6 @@
 # Skills
 
-The nine skills authored in this repository. Each is self-contained: it has no
+The ten skills authored in this repository. Each is self-contained: it has no
 dependency on this repository's layout, its blueprints, or its catalog, so it
 works the same whether you install it with the skills CLI or vendor it into a
 project.
@@ -37,6 +37,7 @@ into the same `.agents/skills/` root the CLI uses.
 | [`refactor`](./refactor/SKILL.md) | Behavior-preserving refactoring: trace, green tests, one method per step. |
 | [`documentation`](./documentation/SKILL.md) | Why-not-what comments and Diátaxis-shaped system docs. |
 | [`plan-initiative`](./plan-initiative/SKILL.md) | Turn a rough initiative into one scoped, outcome-oriented brief with explicit boundaries. |
+| [`plan-diagram`](./plan-diagram/SKILL.md) | Open a plan, spec, or issue with one coarse C4-shaped boxes-and-arrows diagram: files, classes, methods, policies, and the boundaries between them. |
 
 ## Meta
 

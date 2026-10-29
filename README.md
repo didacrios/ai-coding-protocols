@@ -41,6 +41,7 @@ ai-coding-protocols/
 | `refactor` | Surgical refactoring without behavior changes | refactor, cleanup, simplify, extract |
 | `documentation` | In-code and system docs using Diataxis framework | docs, documentation, tsdoc, phpdoc |
 | `plan-initiative` | Initiative framing protocol for Engineering Managers with strict discovery and scope boundaries | initiative, kickoff, scope, framing, epics |
+| `plan-diagram` | Coarse C4-shaped boxes-and-arrows model inside plans, specs and issues, with a fixed shape lexicon | diagram, sketch, boxes and arrows, c4, visualize, container, boundary |
 
 #### Meta Skills
 
