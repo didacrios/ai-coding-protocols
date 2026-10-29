@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.0.0] — 2026-10-29
+
 ### Added
 
 - `LICENSE` (MIT) — the repository had no license, which blocked community use. Covers the own skills, catalog, and adapters; third-party material keeps its own terms (`NOTICE`, `licenses/`).
@@ -22,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- `skills/recursive-exploration` is now `1.2.0`. Trace the consumers and dependencies the current step touches, and name anything deferred. When a structural index exists, rank entry points before reading file bodies. A runtime-behavior claim needs a run, a test, or a trace. A symbol whose body is not in the repo is resolved from docs, tests, or a probe; its name is not evidence. One logical change may span interface, implementation, and test. State the plan before code, in the harness's reasoning block when it has one. The `Related skills` footer is gone; composition stays in `skills/README.md`.
 - **Vendored root renamed `.ai/` → `.agents/`.** `make ai` became `make vendor` (alias `make ai` kept) and now writes `<path>/.agents/{skills,blueprints,template}`. The repository previously shipped two competing layouts for one concept: `make ai` wrote `.ai/skills/` while `npx skills add` wrote `.agents/skills/`, and `blueprints/marketing.md` already documented the latter. `.agents/skills/` is the canonical cross-client location the skills CLI itself uses, so a vendored tree and a CLI-installed tree are now the same tree and `npx skills check` / `update` work on either. `make vendor` warns when a legacy `.ai/` is present but never deletes it — remove yours by hand after verifying. See `.agents/adr/0003-vendored-root-is-dot-agents.md`.
 - **Own skills are now self-contained and installable one at a time.** Every `skills/*/SKILL.md` dropped its repository-internal references (`.ai/` paths, `blueprints/`, `catalog/`), replaced the `Integration` section with optional `Related skills` relative links, and moved metadata out of a duplicated bottom `## Skill Metadata` block into frontmatter.
 - **Skill frontmatter rewritten to the Agent Skills shape.** `name`, a rich model-facing `description` (what it does, when to use it, and the adjacent case it is not for), `license: MIT`, and `metadata: {author, version}`. The non-standard `triggers:` array and top-level `version:` are gone; the `description` is the trigger. All nine skills bump to `1.1.0`.
