@@ -60,8 +60,9 @@ Edges: `-->|calls|` runtime dependency, `-.->|reads|` observation only,
    append `?` to assumptions.
    *Done when:* every node traces to a file, symbol, or decision.
 4. **Draw a `flowchart`.** `LR` or `TB`, one `subgraph` per boundary, quoted
-   edge labels, at most about twelve nodes.
-   *Done when:* it parses as Mermaid and reads without the prose.
+   edge labels.
+   *Done when:* it parses as Mermaid, passes the node count, and reads without
+   the prose.
 5. **Place it inline**, a `mermaid` block right after the problem or goal and
    before any task breakdown.
    *Done when:* the picture precedes the wall of text.
@@ -70,6 +71,18 @@ Edges: `-->|calls|` runtime dependency, `-.->|reads|` observation only,
 
 Skeletons to copy: `assets/skeletons.md`.
 
+## Guards
+
+Three ways a plan diagram turns quietly false:
+
+- **Container drawn as component, or the reverse.** A container is deployable
+  or runnable; a component is code inside one. A class on an L2 diagram, or a
+  service on an L3 diagram, means the level was never really chosen.
+- **A shared library boxed as a container.** It is not one: draw the import as
+  an edge, not as a sibling box on the same level.
+- **A bus drawn as one box.** One box per topic or channel. A single broker box
+  couples every publisher to every consumer on sight.
+
 ## Guidelines
 
 1. Never use the Mermaid C4 blocks (`C4Context`, `C4Container`,
@@ -77,11 +90,15 @@ Skeletons to copy: `assets/skeletons.md`.
    as raw text. Use `flowchart` plus `subgraph`.
 2. Set no fills — a hardcoded `fill:` breaks dark themes. One `classDef` with
    `stroke-dasharray` marks assumptions; nothing else is styled.
-3. Stop near twelve nodes. More means the question is too big: split it.
-4. Label every edge with a verb. No unlabelled or bidirectional arrows.
-5. Labels carry real paths and identifiers: no invented names, fields, or
+3. Count the boxes. Past twelve, the question is too big: split it into two
+   diagrams, never shrink the labels to make it fit.
+4. Every node or edge you inferred rather than read carries `?` in its label
+   and one `%% assumed: <reason>` comment, so the assumption can be grepped and
+   argued with.
+5. Label every edge with a verb. No unlabelled or bidirectional arrows.
+6. Labels carry real paths and identifiers: no invented names, fields, or
    statuses.
-6. Redraw when the plan changes; a stale diagram asserts a coupling that no
+7. Redraw when the plan changes; a stale diagram asserts a coupling that no
    longer holds.
 
 ## Related skills

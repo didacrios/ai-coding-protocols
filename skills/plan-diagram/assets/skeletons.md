@@ -30,6 +30,7 @@ flowchart LR
   R ==>|writes| DB
   S -.->|reads| G
 
+  %% assumed: OrderService has no refund entry point yet; the seam is a guess
   classDef assumed stroke-dasharray:4 4,stroke:#888
 ```
 

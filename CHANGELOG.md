@@ -16,6 +16,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Assets: `assets/skeletons.md` with copy-paste L2, L3 and ASCII skeletons. The
   Mermaid C4 extensions are rejected on purpose — GitHub's bundled renderer has
   no C4 support and prints those blocks as raw text.
+- `skills/plan-diagram` hardening: a `Guards` section naming the three ways a
+  plan diagram turns quietly false — a container drawn as a component or the
+  reverse, a shared library boxed as a container, a bus drawn as one box — plus
+  a twelve-node gate that splits the question instead of shrinking the labels,
+  and a `%% assumed: <reason>` marker so every inferred node or edge can be
+  grepped and argued with.
 
 ## [2.0.0] — 2026-10-29
 

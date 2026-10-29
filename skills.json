@@ -5,7 +5,8 @@
     "note": "Authored in this repository. Auto-discovered from skills/ — each directory with a SKILL.md. template/ is a scaffold (SKILL.template.md), not a skill. Self-contained: no skill references this repository's blueprints or catalog, so each installs standalone. Install with: npx skills add didacrios/ai-coding-protocols (or make install-own-skills). Vendored copies go to .agents/skills/ via `make vendor <path>` — the same canonical root the skills CLI uses. recursive-exploration, typescript-standard, php-standard, code-review, refactor, documentation, skill-generator, and project-bootstrap landed in 2da73d6 (2026-02-26) when protocols/ became skills/. plan-initiative landed in 7552f1c (2026-04-10). Frontmatter moved to the Agent Skills shape and skills decoupled in the community-distribution pass (2026-10-13); all nine at 1.1.0. Vendored root renamed .ai/ -> .agents/ in the same pass. plan-diagram landed at 1.0.0 in the C4-shaped plan diagram pass.",
     "license": "MIT",
     "inspired_by": {
-      "recursive-exploration": "MIT CSAIL Recursive Language Models (https://arxiv.org/pdf/2512.24601) — idea, not a copied skill file"
+      "recursive-exploration": "MIT CSAIL Recursive Language Models (https://arxiv.org/pdf/2512.24601) — idea, not a copied skill file",
+      "plan-diagram": "lynxlangya/techne anchor-viz (https://github.com/lynxlangya/techne) — the `%% assumed:` provenance marker and the explicit node-count gate, as ideas; no file copied"
     },
     "skills": [
       "recursive-exploration",
